@@ -32,7 +32,7 @@ function createMainWindow() {
 }
 
 app.on("ready", function() {
-    buildMenu();
+    //buildMenu();
     createMainWindow();
 });
 app.on("activate", createMainWindow);
