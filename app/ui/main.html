@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html ng-app="main">
+<head>
+    <title>Babble</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <script src="js/lib/angular.min.js"></script>
+    <script src="js/mainController.js"></script>
+</head>
+<body ng-controller="messageApp">
+    <div class="sidebar">
+        <div class="sidebar-content">
+            <div class="user-icon" ng-class="{selected: convo == selectedConvo}" ng-repeat="convo in conversations" ng-click="select(convo)">
+                <img class="avatar" ng-src="{{convo.imageSrc}}" title="{{ convo.name }}" />
+            </div>
+        </div>
+        <div class="window-buttons">
+            <div ng-if="drawButtons">
+                <div class="window-btn close" ng-click="closeWindow()"></div>
+                <div class="window-btn min" ng-click="minimizeWindow()"></div>
+                <div class="window-btn max" ng-click="maximizeWindow()"></div>
+            </div>
+        </div>
+    </div>
+    <div class="main">
+        <span class="placeholder">Babble</span>
+        <div class="conversation-screen" ng-class="{hidden: selectedConvo == null}">
+            <div class="header">
+                <div class="info-pane">
+                    <img class="room-image" ng-src="{{selectedConvo.imageSrc}}"></img>
+                    <div class="room-details">
+                        <span class="room-name">{{ selectedConvo.name }}</span>
+                        <span class="members">{{ selectedConvo.members.length }} members</span>
+                    </div>
+                </div>
+                <div class="actions">
+                    <div class="button plans" title="Plans" ng-click="showPlans()"></div>
+                    <div class="button users" title="Members" ng-click="showMembers()"></div>
+                </div>
+            </div>
+            <div class="message-list">
+                <div class="message" ng-repeat="msg in selectedConvo.chatHistory" ng-class="{mine: msg.sender == 'you'}">
+                    <div class="message-content">{{ msg.content }}</div>
+                    <img class="message-avatar" ng-src="{{selectedConvo.imageSrc}}" ng-if="msg.sender != 'you'" />
+                    <span class="message-name" title="Sent by {{ msg.sender }} {{ formatTimestamp(msg.timestamp) }}">{{ msg.sender }}</span>
+                </div>
+            </div>
+            <div class="message-bar">
+                <form ng-submit="messageSent()">
+                    <input type="text" ng-model="messageInput" placeholder="Type a message..." />
+                </form>
+                <button class="add-content" ng-click="addContent()"></button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

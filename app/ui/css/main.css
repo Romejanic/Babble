@@ -1,0 +1,283 @@
+@font-face {
+    font-family: "Roboto";
+    src: url("fonts/Roboto-Light.ttf") format("truetype");
+}
+* {
+    font-family: "Roboto";
+}
+
+.sidebar {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100px;
+    height: 100%;
+    margin: 0px;
+    box-sizing: border-box;
+
+    color: white;
+    background-color: rgba(54, 54, 54, 0.25);
+    -webkit-app-region: drag;
+
+    overflow-y: scroll;
+    padding-top: 30px;
+}
+.window-buttons {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 25px;
+    -webkit-app-region: drag;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.75) 65%,rgba(0,0,0,0) 100%);
+    box-sizing: border-box;
+    padding-left: 3px;
+}
+.window-btn {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    filter: invert();
+
+    background-size: 75%;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+.window-btn:hover {
+    filter: invert() brightness(50%);
+}
+.window-btn.close {
+    background-image: url("../img/icons/close.png");
+}
+.window-btn.min {
+    background-image: url("../img/icons/remove.png");
+}
+.window-btn.max {
+    background-image: url("../img/icons/add.png");
+}
+
+.user-icon {
+    width: 100%;
+    height: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.user-icon.selected {
+    background-color: white;
+}
+
+.user-icon .avatar {
+    display: block;
+    width: 85px;
+    height: 85px;
+    border-radius: 85px;
+    margin: auto;
+    background-color: white;
+    background-image: url("../img/avatars/default.png");
+}
+.user-icon .avatar:hover {
+    filter: brightness(50%);
+}
+
+.hidden {
+    display: none;
+}
+
+.main {
+    position: fixed;
+    display: flex;
+    top: 0px;
+    left: 100px;
+    width: calc(100% - 100px);
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: rgba(54, 54, 54, 0.25);
+    -webkit-app-region: drag;
+}
+.main span.placeholder {
+    font-size: 4em;
+    font-weight: bold;
+    user-select: none;
+    color: rgba(0,0,0,0.25);
+}
+.conversation-screen {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 5px;
+    background: white;
+    -webkit-app-region: no-drag;
+}
+.conversation-screen .header {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 75px;
+    z-index: 99;
+    box-sizing: border-box;
+    border-bottom: 1px solid #e3e3e3;
+    background: linear-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.75));
+    -webkit-app-region: drag;
+}
+.conversation-screen .message-bar {
+    position: absolute;
+    top: calc(100% - 45px);
+    left: 0px;
+    width: 100%;
+    height: 45px;
+    z-index: 99;
+
+    border-top: 1px solid #e3e3e3;
+    background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 1));
+}
+.conversation-screen .message-list {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    padding: 80px 5px 50px 5px;
+    box-sizing: border-box;
+}
+.message-list .message {
+    display: block;
+    width: auto;
+    max-width: 50%;
+    min-height: 20px;
+    margin-bottom: 10px;
+    color: #909090;
+    box-sizing: border-box;
+    text-align: left;
+    overflow-wrap: break-word;
+    float: left;
+    clear: both;
+}
+.message .message-avatar {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    margin-top: 3px;
+    vertical-align: middle;
+}
+.message .message-content {
+    background-color: #f3f3f3;
+    border: 1px solid #dfdfdf;
+    border-radius: 10px;
+    padding: 5px;
+}
+.message.mine {
+    float: right;
+    text-align: right;
+}
+.message.mine .message-content {
+    background-color: #d9ead3;
+}
+.message .message-name {
+    display: inline;
+    padding-left: 5px;
+}
+/*
+.message:last-child {
+    margin-bottom: 130px;
+}
+*/
+.message-bar input[type=text] {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: calc(100% - 40px);
+    height: 100%;
+    box-sizing: border-box;
+    border: none;
+    margin: none;
+    padding: 0px 5px;
+    font-size: 1em;
+    background: none;
+}
+.message-bar .add-content {
+    position: absolute;
+    top: 0px;
+    left: calc(100% - 40px);
+    width: 40px;
+    height: 100%;
+    border: none;
+    padding: none;
+
+    background: url("../img/icons/add.png");
+    background-size: 50%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.message-bar .add-content:hover {
+    background-color: rgba(54, 54, 54, 0.25);
+}
+
+.info-pane {
+    width: auto;
+    float: left;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 5px;
+}
+.info-pane .room-image, .info-pane .room-details {
+    display: inline;
+}
+.info-pane .room-image {
+    height: 65px;
+    border-radius: 65px;
+}
+.info-pane .room-details {
+    margin-left: 5px;
+    text-align: left;
+}
+span.room-name {
+    display: block;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+span.members {
+    display: block;
+    font-size: 0.8em;
+    color: gray;
+}
+.header .actions {
+    width: auto;
+    height: 100%;
+    float: right;
+    padding-right: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.actions .button {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    margin-left: 5px;
+    cursor: pointer;
+
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.actions .button.users {
+    background-image: url("../img/icons/user.png");
+}
+.actions .button.plans {
+    background-image: url("../img/icons/calendar.png");
+}
