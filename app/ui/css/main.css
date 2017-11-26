@@ -19,7 +19,9 @@
     background-color: rgba(54, 54, 54, 0.25);
     -webkit-app-region: drag;
 
-    overflow-y: scroll;
+	overflow-x: hidden;
+    overflow-y: auto;
+	-ms-overflow-style: -ms-autohiding-scrollbar;
     padding-top: 30px;
 }
 .window-buttons {
@@ -43,6 +45,7 @@
     background-size: 75%;
     background-position: center center;
     background-repeat: no-repeat;
+	-webkit-app-region: no-drag;
 }
 .window-btn:hover {
     filter: invert() brightness(50%);
@@ -63,6 +66,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+	-webkit-app-region: no-drag;
 }
 .user-icon.selected {
     background-color: white;
@@ -233,6 +237,7 @@
     justify-content: center;
     align-items: center;
     padding-left: 5px;
+	-webkit-app-region: no-drag;
 }
 .info-pane .room-image, .info-pane .room-details {
     display: inline;
@@ -263,6 +268,7 @@ span.members {
     display: flex;
     justify-content: center;
     align-items: center;
+	-webkit-app-region: no-drag;
 }
 .actions .button {
     display: inline-block;

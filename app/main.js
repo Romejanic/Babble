@@ -21,6 +21,8 @@ function createMainWindow() {
     };
     if(!isMac()) {
         delete options.titleBarStyle;
+		delete options.vibrancy;
+		delete options.transparent;
         options.frame = false;
     }
     mainWindow = new BrowserWindow(options);
@@ -32,7 +34,7 @@ function createMainWindow() {
 }
 
 app.on("ready", function() {
-    //buildMenu();
+    buildMenu();
     createMainWindow();
 });
 app.on("activate", createMainWindow);

@@ -84,6 +84,8 @@ ngApp.controller("messageApp", function($scope) {
         $scope.closeWindow = function() { remote.getCurrentWindow().close(); }
         $scope.minimizeWindow = function() { remote.getCurrentWindow().minimize() };
         $scope.maximizeWindow = function() { remote.getCurrentWindow().maximize() };
+		document.querySelector(".main").style.backgroundColor = "rgb(54, 54, 54)";
+		document.querySelector(".sidebar").style.backgroundColor = "rgb(54, 54, 54)";
     }
 });
 
