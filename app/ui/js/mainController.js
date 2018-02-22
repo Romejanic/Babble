@@ -1,5 +1,5 @@
 const moment = require("moment");
-const remote = require("electron").remote;
+const {remote, ipcRenderer} = require("electron");
 
 var ngApp = angular.module("main", []);
 
@@ -26,7 +26,11 @@ ngApp.controller("messageApp", function($scope) {
             content: msg,
             timestamp: Date.now()
         });
-        // TODO: actually send the message
+        ipcRenderer.send("sendMessage", {
+            conversation: $scope.selectedConvo,
+            type: "text",
+            content: msg
+        });
         setTimeout(() => {
             $scope.$apply();
             document.querySelector(".message-list").scrollTo(0, Number.MAX_VALUE);

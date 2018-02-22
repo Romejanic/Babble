@@ -1,4 +1,15 @@
-const {app, BrowserWindow, Menu} = require("electron");
+const {app, BrowserWindow, Menu, ipcMain} = require("electron");
+
+var data = {
+    userProfile: {
+        id: "2dsa2dsas",
+        name: "User",
+        profilePic: null
+    },
+    conversations: [
+        
+    ]
+};
 
 var mainWindow = null;
 
@@ -34,7 +45,7 @@ function createMainWindow() {
 }
 
 app.on("ready", function() {
-    buildMenu();
+    //buildMenu();
     createMainWindow();
 });
 app.on("activate", createMainWindow);
@@ -42,6 +53,14 @@ app.on("window-all-closed", function() {
     if(!isMac()) {
         app.quit();
     }
+});
+
+ipcMain.on("sendMessage", (event, message) => {
+    console.log(message);
+    // TODO: send to server
+});
+ipcMain.on("getUserData", (event) => {
+    event.sender.send("getUserData", data);
 });
 
 function isMac() {

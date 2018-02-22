@@ -1,6 +1,6 @@
 {
   "name": "Babble",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Enterprise group chat.",
   "main": "./app/main.js",
   "scripts": {
