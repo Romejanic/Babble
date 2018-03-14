@@ -1,5 +1,5 @@
 {
-  "name": "Babble",
+  "name": "babble",
   "version": "0.0.3",
   "description": "Enterprise group chat.",
   "main": "./app/main.js",
