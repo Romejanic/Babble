@@ -83,6 +83,9 @@
 .user-icon .avatar:hover {
     filter: brightness(50%);
 }
+.user-icon .avatar.add {
+    background-color: transparent;
+}
 
 .hidden {
     display: none;
@@ -197,6 +200,9 @@
     margin-bottom: 130px;
 }
 */
+.message-bar * {
+    outline: none;
+}
 .message-bar input[type=text] {
     position: absolute;
     top: 0px;
@@ -281,7 +287,7 @@ span.members {
     background-repeat: no-repeat;
 }
 .actions .button.users {
-    background-image: url("../img/icons/user.png");
+    background-image: url("../img/icons/users.png");
 }
 .actions .button.plans {
     background-image: url("../img/icons/calendar.png");
