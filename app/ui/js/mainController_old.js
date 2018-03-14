@@ -51,10 +51,33 @@ ngApp.controller("messageApp", function($scope) {
         return moment(epoch).fromNow();
     };
 
-    ipcRenderer.on("getUserData", (event, data) => {
-        $scope.conversations = data.conversations;
-    });
-    ipcRenderer.send("getUserData");
+    // generate randomly sized conversations to fill interface and demonstrate it
+    var n = 1 + Math.floor(Math.random() * 20);
+    for(var i = 0; i < n; i++) {
+        var people = new Array(1 + Math.floor(Math.random() * 9));
+        var chats = [];
+        var messageN = 1 + Math.floor(Math.random() * 25);
+        for(var j = 0; j < messageN; j++) {
+            var messageC = "";
+            var loremN = (1 + Math.floor(Math.random() * 3));
+            for(var k = 0; k < loremN; k++) {
+                messageC += "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ";
+            }
+            messageC = messageC.trim();
+            chats.push({
+                type: "text",
+                sender: Math.random() > 0.5 ? "me" : "you",
+                content: messageC,
+                timestamp: Date.now() - Math.floor(429492 * (messageN-j))
+            });
+        }
+        $scope.conversations.push({
+            name: "Test Person #" + (i+1),
+            members: people,
+            imageSrc: "img/avatars/default.png",
+            chatHistory: chats
+        });
+    }
 
     $scope.refreshInterval = setInterval(function() {
         $scope.$apply(); // refresh time stamps

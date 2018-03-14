@@ -79,7 +79,6 @@
     border-radius: 85px;
     margin: auto;
     background-color: white;
-    background-image: url("../img/avatars/default.png");
 }
 .user-icon .avatar:hover {
     filter: brightness(50%);

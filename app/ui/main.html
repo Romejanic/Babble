@@ -10,7 +10,10 @@
     <div class="sidebar">
         <div class="sidebar-content">
             <div class="user-icon" ng-class="{selected: convo == selectedConvo}" ng-repeat="convo in conversations" ng-click="select(convo)">
-                <img class="avatar" ng-src="{{convo.imageSrc}}" title="{{ convo.name }}" />
+                <img class="avatar" ng-src="{{convo.image}}" title="{{ convo.name }}" />
+            </div>
+            <div class="user-icon" ng-click="createConversation()">
+                <img class="avatar" src="img/icons/add_convo.png" />
             </div>
         </div>
         <div class="window-buttons">
@@ -26,7 +29,7 @@
         <div class="conversation-screen" ng-class="{hidden: selectedConvo == null}">
             <div class="header">
                 <div class="info-pane">
-                    <img class="room-image" ng-src="{{selectedConvo.imageSrc}}"></img>
+                    <img class="room-image" ng-src="{{selectedConvo.image}}"></img>
                     <div class="room-details">
                         <span class="room-name">{{ selectedConvo.name }}</span>
                         <span class="members">{{ selectedConvo.members.length }} members</span>
@@ -40,7 +43,7 @@
             <div class="message-list">
                 <div class="message" ng-repeat="msg in selectedConvo.chatHistory" ng-class="{mine: msg.sender == 'you'}">
                     <div class="message-content">{{ msg.content }}</div>
-                    <img class="message-avatar" ng-src="{{selectedConvo.imageSrc}}" ng-if="msg.sender != 'you'" />
+                    <img class="message-avatar" ng-src="{{selectedConvo.image}}" ng-if="msg.sender != 'you'" />
                     <span class="message-name" title="Sent by {{ msg.sender }} {{ formatTimestamp(msg.timestamp) }}">{{ msg.sender }}</span>
                 </div>
             </div>

@@ -7,7 +7,19 @@ var data = {
         profilePic: null
     },
     conversations: [
-        
+        {
+            name: "Test Conversation",
+            members: [1, 2, 3],
+            image: "img/avatars/default.png",
+            chatHistory: [
+                {
+                    type: "text",
+                    sender: "you",
+                    content: "Hello world!",
+                    timestamp: Date.now()
+                }
+            ]
+        }
     ]
 };
 
