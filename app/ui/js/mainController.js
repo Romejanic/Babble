@@ -1,4 +1,5 @@
 const moment = require("moment");
+const Popper = require("popper.js");
 const {remote, ipcRenderer} = require("electron");
 
 var ngApp = angular.module("main", []);
@@ -7,7 +8,11 @@ ngApp.controller("messageApp", function($scope) {
     $scope.conversations = [];
     $scope.selectedConvo = null;
     $scope.select = function(convo) {
+        $scope.activeScreen = "conversation";
         $scope.selectedConvo = convo;
+    };
+    $scope.createConversation = function() {
+        $scope.activeScreen = "newConversation";
     };
 
     $scope.messageSent = function() {

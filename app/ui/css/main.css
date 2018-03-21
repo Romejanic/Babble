@@ -113,7 +113,7 @@
     user-select: none;
     color: rgba(0,0,0,0.25);
 }
-.conversation-screen {
+.main .content {
     position: absolute;
     top: 0px;
     left: 0px;
@@ -291,4 +291,16 @@ span.members {
 }
 .actions .button.plans {
     background-image: url("../img/icons/calendar.png");
+}
+
+.add-conversation-popup {
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.35s;
+
+    background-color: white;
+}
+.add-conversation-popup.visible {
+    visibility: visible;
+    opacity: 1;
 }

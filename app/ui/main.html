@@ -9,10 +9,10 @@
 <body ng-controller="messageApp">
     <div class="sidebar">
         <div class="sidebar-content">
-            <div class="user-icon" ng-class="{selected: convo == selectedConvo}" ng-repeat="convo in conversations" ng-click="select(convo)">
+            <div class="user-icon" ng-class="{selected: convo == selectedConvo && activeScreen == 'conversation'}" ng-repeat="convo in conversations" ng-click="select(convo)">
                 <img class="avatar" ng-src="{{convo.image}}" title="{{ convo.name }}" />
             </div>
-            <div class="user-icon" ng-click="createConversation()">
+            <div class="user-icon add-convo" ng-class="{selected: activeScreen == 'newConversation'}" ng-click="createConversation()">
                 <img class="avatar add" src="img/icons/add_convo.png" />
             </div>
         </div>
@@ -26,7 +26,7 @@
     </div>
     <div class="main">
         <span class="placeholder">Babble</span>
-        <div class="conversation-screen" ng-class="{hidden: selectedConvo == null}">
+        <div class="content conversation-screen" ng-class="{hidden: selectedConvo == null || activeScreen != 'conversation'}">
             <div class="header">
                 <div class="info-pane">
                     <img class="room-image" ng-src="{{selectedConvo.image}}"></img>
@@ -53,6 +53,9 @@
                 </form>
                 <button class="add-content" ng-click="addContent()"></button>
             </div>
+        </div>
+        <div class="content new-conversation" ng-class="{hidden: activeScreen != 'newConversation' }">
+            <h1>testing 123</h1>
         </div>
     </div>
 </body>
