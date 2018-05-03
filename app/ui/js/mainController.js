@@ -1,5 +1,4 @@
 const moment = require("moment");
-const Popper = require("popper.js");
 const {remote, ipcRenderer} = require("electron");
 
 var ngApp = angular.module("main", []);
@@ -20,10 +19,9 @@ ngApp.controller("messageApp", function($scope) {
             return;
         }
         var msg = $scope.messageInput;
-        if(!msg || msg.trim().length < 0) {
+        if(!msg || (msg = msg.trim()).length < 0) {
             return;
         }
-        msg = msg.trim();
         $scope.messageInput = "";
         $scope.selectedConvo.chatHistory.push({
             type: "text",
