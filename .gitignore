@@ -3,3 +3,5 @@ app/.vscode/
 .DS_Store
 */.DS_Store
 *.zip
+*.app
+*.exe

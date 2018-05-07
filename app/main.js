@@ -1,4 +1,5 @@
 const {app, BrowserWindow, Menu, ipcMain} = require("electron");
+const client = require("./client.js")();
 
 var data = {
     userProfile: {
@@ -59,11 +60,22 @@ function createMainWindow() {
 app.on("ready", function() {
     //buildMenu();
     createMainWindow();
+
+    client.connect("MTAuODguMTEzLjcwOjU1MjAy", (err) => {
+        if(err) {
+            console.error("Failed to connect to server!");
+        }
+    });
 });
 app.on("activate", createMainWindow);
 app.on("window-all-closed", function() {
     if(!isMac()) {
         app.quit();
+    }
+});
+app.on("will-quit", () => {
+    if(client) {
+        client.disconnect();
     }
 });
 

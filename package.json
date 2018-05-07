@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "electron-packager": "^10.1.0",
+    "keypair": "^1.0.1",
     "moment": "^2.21.0"
   },
   "repository": {
