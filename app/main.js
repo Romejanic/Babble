@@ -61,7 +61,11 @@ app.on("ready", function() {
     //buildMenu();
     createMainWindow();
 
-    client.connect("MTAuODguMTEzLjcwOjU1MjAy", (err) => {
+    var credentials = {
+        username: "jackd",
+        password: "password"
+    };
+    client.connect("MTAuODguMTEzLjMzOjU1MjAy", credentials, (err) => {
         if(err) {
             console.error("Failed to connect to server!");
         }

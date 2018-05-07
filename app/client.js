@@ -2,8 +2,8 @@ const net = require("net");
 const rsa = require("./rsa.js");
 
 const client = function() {
-    return {
-        connect: function(code, callback) {
+    var obj = {
+        connect: function(code, credentials, callback) {
             var socketAddr = new Buffer(code, "base64").toString();
             var hostname = socketAddr.substring(0, socketAddr.indexOf(":"));
             var port = socketAddr.substring(socketAddr.indexOf(":") + 1);
@@ -12,6 +12,7 @@ const client = function() {
 
             this.client = {
                 user_id: null,
+                credentials: credentials,
                 server_public_key: null
             };
 
@@ -43,22 +44,22 @@ const client = function() {
         handleMessage: function(data) {
             try {
                 var packetStr;
-                if(client.client.server_public_key) {
-                    packetStr = rsa.decryptVerified(data, rsa.rsaKeys.private, client.client.server_public_key);
+                if(obj.client.server_public_key) {
+                    packetStr = rsa.decryptVerified(data, rsa.rsaKeys.private, obj.client.server_public_key);
                 } else {
                     packetStr = data.toString();
                 }
                 var packet = JSON.parse(packetStr);
-                if(!client.client.server_public_key) {
+                if(!obj.client.server_public_key) {
                     if(packet.id == "rsa_public_key" && typeof packet.payload == "string") {
                         rsa.sendKeyExchangePacket(this);
-                        client.client.server_public_key = packet.payload;
+                        obj.client.server_public_key = packet.payload;
                     } else {
                         throw "Packet must be an rsa_public_key with string payload.";
-                        this.close();
+                        this.end();
                     }
                 } else {
-                    client.handlePacket(packet);
+                    obj.handlePacket(packet);
                 }
             } catch(e) {
                 var error = {
@@ -67,8 +68,8 @@ const client = function() {
                 if(e) {
                     error.payload = e;
                 }
-                if(client.client.server_public_key) {
-                    client.sendPacket(error);
+                if(obj.client.server_public_key) {
+                    obj.sendPacket(error);
                 } else {
                     this.write(JSON.stringify(error));
                 }
@@ -76,9 +77,23 @@ const client = function() {
         },
 
         handlePacket: function(packet) {
-
+            console.log("packet recieved: " + packet);
+            if(packet.id == "request_auth") {
+                obj.sendPacket({
+                    id: "authenticate",
+                    payload: obj.client.credentials
+                });
+            } else if(packet.id == "login_status") {
+                if(packet.payload.success) {
+                    obj.client.user_id = packet.payload.userId;
+                    console.log("Login successful! (user id " + obj.client.user_id + ")");
+                } else {
+                    console.error("Login failed: " + packet.payload.error);
+                }
+            }
         }
     };
+    return obj;
 };
 
 module.exports = client;
