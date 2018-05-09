@@ -65,7 +65,7 @@ app.on("ready", function() {
         username: "jackd",
         password: "password"
     };
-    client.connect("MTAuODguMTEzLjMzOjU1MjAy", credentials, (err) => {
+    client.connect("MTcyLjE5LjIwNS4xNjM6NTUyMDI=", credentials, (err) => {
         if(err) {
             console.error("Failed to connect to server!");
         }

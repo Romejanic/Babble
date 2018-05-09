@@ -54,6 +54,7 @@ const client = function() {
                     if(packet.id == "rsa_public_key" && typeof packet.payload == "string") {
                         rsa.sendKeyExchangePacket(this);
                         obj.client.server_public_key = packet.payload;
+                        console.log("sent rsa packet, server's key is " + obj.client.server_public_key);
                     } else {
                         throw "Packet must be an rsa_public_key with string payload.";
                         this.end();
@@ -67,6 +68,9 @@ const client = function() {
                 };
                 if(e) {
                     error.payload = e;
+                }
+                if(typeof e === "object") {
+                    console.log(e);
                 }
                 if(obj.client.server_public_key) {
                     obj.sendPacket(error);
@@ -93,6 +97,7 @@ const client = function() {
             }
         }
     };
+    rsa.generateKeypair();
     return obj;
 };
 
