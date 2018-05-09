@@ -37,7 +37,8 @@ const client = function() {
                 throw "Object is not a packet! (packet requires identifier)";
             }
             var packetJson = JSON.stringify(packet);
-            var encrypted = rsa.encryptVerified(packetJson, this.client.server_public_key);
+            // var encrypted = rsa.encryptVerified(packetJson, this.client.server_public_key);
+            var encrypted = rsa.encrypt(packetJson, this.client.server_public_key);
             this.socket.write(encrypted);
         },
 
@@ -45,8 +46,8 @@ const client = function() {
             try {
                 var packetStr;
                 if(obj.client.server_public_key) {
-                    console.log(obj.client);
-                    packetStr = rsa.decryptVerified(data, obj.client.server_public_key);
+                    // packetStr = rsa.decryptVerified(data, obj.client.server_public_key);
+                    packetStr = rsa.decrypt(data, rsa.rsaKeys.private);
                 } else {
                     packetStr = data.toString();
                 }
