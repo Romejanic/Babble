@@ -11,7 +11,7 @@ const client = function() {
             console.log("Attempting connection to " + socketAddr + "...");
 
             this.client = {
-                user_id: null,
+                user_data: null,
                 credentials: credentials,
                 server_public_key: null
             };
@@ -29,7 +29,9 @@ const client = function() {
             });
         },
         disconnect: function() {
-            this.socket.end();
+            if(this.socket) {
+                this.socket.end();
+            }
         },
 
         sendPacket: function(packet) {
@@ -82,7 +84,7 @@ const client = function() {
         },
 
         handlePacket: function(packet) {
-            console.log("packet recieved: " + packet);
+            console.log("packet recieved:", packet);
             if(packet.id == "request_auth") {
                 obj.sendPacket({
                     id: "authenticate",
@@ -90,8 +92,11 @@ const client = function() {
                 });
             } else if(packet.id == "login_status") {
                 if(packet.payload.success) {
-                    obj.client.user_id = packet.payload.userId;
-                    console.log("Login successful! (user id " + obj.client.user_id + ")");
+                    obj.client.user_data = packet.payload.userId;
+                    console.log("Login successful! (user id " + obj.client.user_data.id + ")");
+                    if(obj.onLoggedIn) {
+                        obj.onLoggedIn(obj.client.user_data);
+                    }
                 } else {
                     console.error("Login failed: " + packet.payload.error);
                 }

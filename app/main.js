@@ -1,27 +1,20 @@
 const {app, BrowserWindow, Menu, ipcMain} = require("electron");
+const path = require("path");
+const fs = require("fs");
 const client = require("./client.js")();
 
 var data = {
     userProfile: {
-        id: "2dsa2dsas",
+        id: 0,
         name: "User",
-        profilePic: null
-    },
-    conversations: [
-        {
-            name: "Test Conversation",
-            members: [1, 2, 3],
-            image: "img/avatars/default.png",
-            chatHistory: [
-                {
-                    type: "text",
-                    sender: "you",
-                    content: "Hello world!",
-                    timestamp: Date.now()
-                }
-            ]
+        profilePic: null,
+        login: {
+            connectionCode: null,
+            username: null,
+            password: null
         }
-    ]
+    },
+    conversations: []
 };
 
 var mainWindow = null;
@@ -65,11 +58,14 @@ app.on("ready", function() {
         username: "jackd",
         password: "password"
     };
-    client.connect("MTcyLjE5LjIwNS4xNjM6NTUyMDI=", credentials, (err) => {
+    client.connect("MTAuODguMTEyLjIzOTo1NTIwMg==", credentials, (err) => {
         if(err) {
             console.error("Failed to connect to server!");
         }
     });
+    client.onLoggedIn = function(data) {
+        setUserInfo(data.id, data.name);
+    };
 });
 app.on("activate", createMainWindow);
 app.on("window-all-closed", function() {
@@ -81,6 +77,7 @@ app.on("will-quit", () => {
     if(client) {
         client.disconnect();
     }
+    saveUserData();
 });
 
 ipcMain.on("sendMessage", (event, message) => {
@@ -90,9 +87,18 @@ ipcMain.on("sendMessage", (event, message) => {
 ipcMain.on("getUserData", (event) => {
     event.sender.send("getUserData", data);
 });
+ipcMain.on("hasCredentials", (event) => {
+    var requiresLogin = !data.userProfile.login || !data.userProfile.login.connectionCode || !data.userProfile.login.username || !data.userProfile.login.password;
+    event.sender.send("requiresLogin", requiresLogin);
+});
 
 function isMac() {
     return process.platform === "darwin";
+}
+
+function setUserInfo(id, name) {
+    data.userProfile.id = id;
+    data.userProfile.name = name;
 }
 
 function buildMenu() {
@@ -156,4 +162,35 @@ function buildMenu() {
         ]
     }
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+}
+
+var userDataPath = path.join(app.getPath("userData"), "data.json");
+console.log("User data is stored at:", userDataPath);
+
+function loadUserData() {
+    try {
+        if(!fs.existsSync(userDataPath)) {
+            return;
+        }
+        var json = fs.readFileSync(userDataPath);
+        data = JSON.parse(json);
+        console.log("Loaded user data!");
+    } catch (e) {
+        console.error("Failed to read user data!\n", e);
+    }
+}
+loadUserData();
+
+function saveUserData() {
+    try {
+        var json = JSON.stringify(data);
+        fs.writeFile(userDataPath, json, (err) => {
+            if(err) {
+                throw err;
+            }
+            console.log("Saved user data!");
+        });
+    } catch(e) {
+        console.error("Failed to save user data!\n", e);
+    }
 }

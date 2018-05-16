@@ -30,6 +30,7 @@
     left: 0px;
     width: 100%;
     height: 25px;
+    z-index: 999;
     -webkit-app-region: drag;
     background: linear-gradient(to bottom, rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.75) 65%,rgba(0,0,0,0) 100%);
     box-sizing: border-box;
@@ -303,4 +304,60 @@ span.members {
 .add-conversation-popup.visible {
     visibility: visible;
     opacity: 1;
+}
+
+.login-form {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 99;
+    background-color: white;
+    box-sizing: border-box;
+    padding: 10px;
+    padding-top: 20px;
+    box-shadow: inset 0px 25px 5px rgba(0,0,0,0.5);
+    -webkit-app-region: drag;
+}
+.login-form .content {
+    display: inherit;
+    width: 400px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    -webkit-app-region: no-drag;
+}
+.login-form .content h1 {
+    text-align: center;
+    user-select: none;
+}
+.login-form span, .login-form label {
+    user-select: none;
+}
+.login-form .form {
+    margin-top: 20px;
+}
+.login-form .form label {
+    font-weight: bold;
+    font-size: 1.25em;
+}
+.login-form .form input {
+    width: 100%;
+    height: 30px;
+    font-size: 1em;
+    margin-bottom: 5px;
+    box-sizing: border-box;
+}
+.login-form .content button {
+    width: 100%;
+    height: 30px;
+    font-size: 1em;
+    margin-top: 10px;
+    border: none;
+    background: none;
+    transition: 0.25s;
+}
+.login-form .content button:hover {
+    background-color: rgba(54, 54, 54, 0.25);
 }

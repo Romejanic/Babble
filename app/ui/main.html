@@ -59,5 +59,21 @@
             <div class="image"></div>
         </div>
     </div>
+    <div class="login-form" ng-if="requiresLogin">
+        <div class="content">
+            <h1>Welcome to Babble</h1>
+            <span>Please log in with your username and password, and the connection code provided by your administrator.</span>
+            <br>
+            <div class="form">
+                <label for="connection_code">Connection Code</label><br>
+                <input name="connection_code" placeholder="Connection code..." type="text" /><br>
+                <label for="username">Username</label><br>
+                <input name="username" placeholder="Username..." type="text" /><br>
+                <label for="password">Password</label><br>
+                <input name="password" placeholder="Password..." type="password" /><br>
+            </div>
+            <button>Log In</button>
+        </div>                
+    </div>
 </body>
 </html>

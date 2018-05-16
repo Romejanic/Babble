@@ -57,7 +57,13 @@ ngApp.controller("messageApp", function($scope) {
     ipcRenderer.on("getUserData", (event, data) => {
         $scope.conversations = data.conversations;
     });
+    ipcRenderer.on("requiresLogin", (event, requiresLogin) => {
+        if(requiresLogin) {
+            $scope.requiresLogin = requiresLogin;
+        }
+    });
     ipcRenderer.send("getUserData");
+    ipcRenderer.send("hasCredentials");
 
     $scope.refreshInterval = setInterval(function() {
         $scope.$apply(); // refresh time stamps
