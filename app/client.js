@@ -4,7 +4,7 @@ const rsa = require("./rsa.js");
 const client = function() {
     var obj = {
         connect: function(code, credentials, callback) {
-            var socketAddr = new Buffer(code, "base64").toString();
+            var socketAddr = Buffer.from(code, "base64").toString();
             var hostname = socketAddr.substring(0, socketAddr.indexOf(":"));
             var port = socketAddr.substring(socketAddr.indexOf(":") + 1);
 

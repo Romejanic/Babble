@@ -14,6 +14,15 @@ ngApp.controller("messageApp", function($scope) {
         $scope.activeScreen = "newConversation";
     };
 
+    $scope.connect = function() {
+        console.log("connection_code:", $scope.connection_code, "username:", $scope.username, "password:", $scope.password);
+        ipcRenderer.send("connect", {
+            connectionCode: $scope.connection_code,
+            username: $scope.username,
+            password: $scope.password
+        });
+    };
+
     $scope.messageSent = function() {
         if(!$scope.selectedConvo) {
             return;
@@ -77,6 +86,8 @@ ngApp.controller("messageApp", function($scope) {
 		document.querySelector(".main").style.backgroundColor = "rgb(54, 54, 54)";
 		document.querySelector(".sidebar").style.backgroundColor = "rgb(54, 54, 54)";
     }
+
+    console.log($scope);
 });
 
 // The name says it all

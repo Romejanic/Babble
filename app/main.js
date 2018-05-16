@@ -54,15 +54,6 @@ app.on("ready", function() {
     //buildMenu();
     createMainWindow();
 
-    var credentials = {
-        username: "jackd",
-        password: "password"
-    };
-    client.connect("MTAuODguMTEyLjIzOTo1NTIwMg==", credentials, (err) => {
-        if(err) {
-            console.error("Failed to connect to server!");
-        }
-    });
     client.onLoggedIn = function(data) {
         setUserInfo(data.id, data.name);
     };
@@ -91,6 +82,28 @@ ipcMain.on("hasCredentials", (event) => {
     var requiresLogin = !data.userProfile.login || !data.userProfile.login.connectionCode || !data.userProfile.login.username || !data.userProfile.login.password;
     event.sender.send("requiresLogin", requiresLogin);
 });
+ipcMain.on("connect", (event, credentials) => {
+    console.log(credentials);
+    data.userProfile.login = credentials;
+    client.connect(credentials.connectionCode, credentials, (err) => {
+        if(err) {
+            event.sender.send("connectStatus", {
+                success: false,
+                error: err
+            });
+            data.userProfile.login = {
+                connectionCode: null,
+                username: null,
+                password: null
+            };
+        } else {
+            event.sender.send("connectStatus", {
+                success: true
+            });
+            saveUserData();
+        }
+    });
+});
 
 function isMac() {
     return process.platform === "darwin";
@@ -99,6 +112,7 @@ function isMac() {
 function setUserInfo(id, name) {
     data.userProfile.id = id;
     data.userProfile.name = name;
+    ipcMain.send("getUserData", data);
 }
 
 function buildMenu() {
@@ -164,7 +178,7 @@ function buildMenu() {
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
-var userDataPath = path.join(app.getPath("userData"), "data.json");
+var userDataPath = path.join(app.getPath("userData"), "user.dat");
 console.log("User data is stored at:", userDataPath);
 
 function loadUserData() {
