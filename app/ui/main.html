@@ -59,7 +59,7 @@
             <div class="image"></div>
         </div>
     </div>
-    <div class="login-form" ng-if="requiresLogin">
+    <div class="login-form" role="login" ng-if="requiresLogin">
         <div class="content">
             <h1>Welcome to Babble</h1>
             <span>Please log in with your username and password, and the connection code provided by your administrator.</span>
@@ -73,7 +73,25 @@
                 <input id="password" name="password" placeholder="Password..." type="password" /><br>
             </div>
             <button ng-click="connect()">Log In</button>
+            <span class="status" ng-if="status">{{ status }}</span>
         </div>                
+    </div>
+    <div class="login-form" role="first-time-setup" ng-if="firstLogin">
+        <div class="content">
+            <h1>Welcome, {{ setup_name }}!</h1>
+            <span>To get you settled in, let's confirm everything is right.</span>
+            <div class="form">
+                <label for="name">Is this name correct?</label><br>
+                <input ng-model="setup_name" name="name" placeholder="Name..." type="text" /><br>
+                <label for="password">Choose a new password.</label><br>
+                <input ng-model="setup_password" name="password" placeholder="Password..." type="password" /><br>
+                <label for="password-conf">Confirm your new password.</label><br>
+                <input ng-model="setup_password_conf" name="password-conf" placeholder="Confirm password..." type="password" /><br>
+            </div>
+            <span>Ready to go?</span>
+            <button>Sure am!</button>
+            <span class="status" ng-if="status">{{ status }}</span>
+        </div>
     </div>
 </body>
 </html>

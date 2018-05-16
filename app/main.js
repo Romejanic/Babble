@@ -56,6 +56,9 @@ app.on("ready", function() {
 
     client.onLoggedIn = function(data) {
         setUserInfo(data.id, data.name);
+        if(data.firstLogin) {
+            mainWindow.webContents.send("first-login");
+        }
     };
 });
 app.on("activate", createMainWindow);
@@ -105,7 +108,8 @@ function doConnect() {
             };
         } else {
             mainWindow.webContents.send("connectStatus", {
-                success: true
+                success: true,
+
             });
             saveUserData();
         }

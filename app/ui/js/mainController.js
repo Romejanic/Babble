@@ -19,6 +19,20 @@ ngApp.controller("messageApp", function($scope) {
         var username = document.getElementById("username").value;
         var password = document.getElementById("password").value;
 
+        if(!connection_code || connection_code.trim().length <= 0) {
+            $scope.status = "Please enter a valid connection code!";
+            return;
+        }
+        if(!username || username.trim().length <= 0) {
+            $scope.status = "Please enter a valid username!";
+            return;
+        }
+        if(!password || password.trim().length <= 0) {
+            $scope.status = "Please enter a valid password!";
+            return;
+        }
+        $scope.status = undefined;
+
         console.log("connection_code:", connection_code, "username:", username, "password:", password);
         ipcRenderer.send("connect", {
             connectionCode: connection_code,
@@ -68,6 +82,11 @@ ngApp.controller("messageApp", function($scope) {
     };
 
     ipcRenderer.on("getUserData", (event, data) => {
+        $scope.userProfile = {
+            id: data.userProfile.id,
+            name: data.userProfile.name,
+            profilePic: data.userProfile.profilePic
+        };
         $scope.conversations = data.conversations;
     });
     ipcRenderer.on("requiresLogin", (event, requiresLogin) => {
@@ -84,6 +103,12 @@ ngApp.controller("messageApp", function($scope) {
         } else {
             alert("Login failed: " + result.error);
         }
+    });
+    ipcRenderer.on("first-login", (event) => {
+        $scope.firstLogin = true;
+        $scope.setup_name = $scope.userProfile.name;
+
+        $scope.$apply();
     });
     ipcRenderer.send("getUserData");
 
