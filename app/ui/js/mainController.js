@@ -15,11 +15,15 @@ ngApp.controller("messageApp", function($scope) {
     };
 
     $scope.connect = function() {
-        console.log("connection_code:", $scope.connection_code, "username:", $scope.username, "password:", $scope.password);
+        var connection_code = document.getElementById("connection_code").value;
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+
+        console.log("connection_code:", connection_code, "username:", username, "password:", password);
         ipcRenderer.send("connect", {
-            connectionCode: $scope.connection_code,
-            username: $scope.username,
-            password: $scope.password
+            connectionCode: connection_code,
+            username: username,
+            password: password
         });
     };
 
@@ -69,10 +73,19 @@ ngApp.controller("messageApp", function($scope) {
     ipcRenderer.on("requiresLogin", (event, requiresLogin) => {
         if(requiresLogin) {
             $scope.requiresLogin = requiresLogin;
+            $scope.$apply();
+        }
+    });
+    ipcRenderer.on("connectStatus", (event, result) => {
+        console.log(result);
+        if(result.success) {
+            $scope.requiresLogin = false;
+            $scope.$apply();
+        } else {
+            alert("Login failed: " + result.error);
         }
     });
     ipcRenderer.send("getUserData");
-    ipcRenderer.send("hasCredentials");
 
     $scope.refreshInterval = setInterval(function() {
         $scope.$apply(); // refresh time stamps

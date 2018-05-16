@@ -77,10 +77,9 @@ ipcMain.on("sendMessage", (event, message) => {
 });
 ipcMain.on("getUserData", (event) => {
     event.sender.send("getUserData", data);
-});
-ipcMain.on("hasCredentials", (event) => {
+
     var requiresLogin = !data.userProfile.login || !data.userProfile.login.connectionCode || !data.userProfile.login.username || !data.userProfile.login.password;
-    event.sender.send("requiresLogin", requiresLogin);
+    mainWindow.webContents.send("requiresLogin", requiresLogin);
 });
 ipcMain.on("connect", (event, credentials) => {
     console.log(credentials);
@@ -112,7 +111,7 @@ function isMac() {
 function setUserInfo(id, name) {
     data.userProfile.id = id;
     data.userProfile.name = name;
-    ipcMain.send("getUserData", data);
+    mainWindow.webContents.send("getUserData", data);
 }
 
 function buildMenu() {

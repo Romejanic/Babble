@@ -15,10 +15,10 @@ const client = function() {
                 credentials: credentials,
                 server_public_key: null
             };
+            this.callback = callback;
 
             this.socket = net.createConnection(port, hostname, () => {
                 console.log("Connected to server!");
-                callback();
             });
             this.socket.on("data", this.handleMessage);
             this.socket.on("error", (err) => {
@@ -96,9 +96,11 @@ const client = function() {
                     console.log("Login successful! (user id " + obj.client.user_data.id + ")");
                     if(obj.onLoggedIn) {
                         obj.onLoggedIn(obj.client.user_data);
+                        obj.callback();
                     }
                 } else {
                     console.error("Login failed: " + packet.payload.error);
+                    obj.callback(packet.payload.error);
                 }
             }
         }
