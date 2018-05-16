@@ -78,15 +78,23 @@ ipcMain.on("sendMessage", (event, message) => {
 ipcMain.on("getUserData", (event) => {
     event.sender.send("getUserData", data);
 
-    var requiresLogin = !data.userProfile.login || !data.userProfile.login.connectionCode || !data.userProfile.login.username || !data.userProfile.login.password;
+    var loginData = data.userProfile.login;
+    var requiresLogin = !loginData || !loginData.connectionCode || !loginData.username || !loginData.password;
     mainWindow.webContents.send("requiresLogin", requiresLogin);
+
+    if(loginData && loginData.connectionCode && loginData.username && loginData.password) {
+        doConnect();
+    }
 });
 ipcMain.on("connect", (event, credentials) => {
-    console.log(credentials);
     data.userProfile.login = credentials;
-    client.connect(credentials.connectionCode, credentials, (err) => {
+    doConnect();
+});
+
+function doConnect() {
+    client.connect(data.userProfile.login.connectionCode, data.userProfile.login, (err) => {
         if(err) {
-            event.sender.send("connectStatus", {
+            mainWindow.webContents.send("connectStatus", {
                 success: false,
                 error: err
             });
@@ -96,13 +104,13 @@ ipcMain.on("connect", (event, credentials) => {
                 password: null
             };
         } else {
-            event.sender.send("connectStatus", {
+            mainWindow.webContents.send("connectStatus", {
                 success: true
             });
             saveUserData();
         }
     });
-});
+}
 
 function isMac() {
     return process.platform === "darwin";
