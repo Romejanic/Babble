@@ -82,11 +82,11 @@
             <span>To get you settled in, let's confirm everything is right.</span>
             <div class="form">
                 <label for="name">Is this name correct?</label><br>
-                <input ng-model="setup_name" name="name" placeholder="Name..." type="text" /><br>
+                <input id="setup_name" ng-model="setup_name" name="name" placeholder="Name..." type="text" /><br>
                 <label for="password">Choose a new password.</label><br>
-                <input ng-model="setup_password" name="password" placeholder="Password..." type="password" /><br>
+                <input id="setup_password" name="password" placeholder="Password..." type="password" /><br>
                 <label for="password-conf">Confirm your new password.</label><br>
-                <input ng-model="setup_password_conf" name="password-conf" placeholder="Confirm password..." type="password" /><br>
+                <input id="setup_password_conf" name="password-conf" placeholder="Confirm password..." type="password" /><br>
             </div>
             <span>Ready to go?</span>
             <button ng-click="initialSetup()">Sure am!</button>

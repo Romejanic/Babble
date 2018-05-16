@@ -40,15 +40,17 @@ ngApp.controller("messageApp", function($scope) {
         });
     };
     $scope.initialSetup = function() {
-        var name = $scope.setup_name;
-        var password = $scope.setup_password;
-        var passwordConf = $scope.setup_password_conf;
+        var name = document.getElementById("setup_name").value;
+        var password = document.getElementById("setup_password").value;
+        var passwordConf = document.getElementById("setup_password_conf").value;
 
-        if(!name || !name.trim().length <= 0) {
+        console.log(name, password, passwordConf);
+
+        if(!name || name.trim().length <= 0) {
             $scope.status = "Please enter a valid name!";
             return;
         }
-        if(!password || !password.trim().length <= 0) {
+        if(!password || password.trim().length <= 0) {
             $scope.status = "Please enter a valid password!";
             return;
         }
@@ -122,12 +124,11 @@ ngApp.controller("messageApp", function($scope) {
         }
     });
     ipcRenderer.on("connectStatus", (event, result) => {
-        console.log(result);
         if(result.success) {
             $scope.requiresLogin = false;
             $scope.$apply();
         } else {
-            alert("Login failed: " + result.error);
+            $scope.status = "Error: " + result.error;
         }
     });
     ipcRenderer.on("first-login", (event) => {
@@ -150,8 +151,6 @@ ngApp.controller("messageApp", function($scope) {
 		document.querySelector(".main").style.backgroundColor = "rgb(54, 54, 54)";
 		document.querySelector(".sidebar").style.backgroundColor = "rgb(54, 54, 54)";
     }
-
-    console.log($scope);
 });
 
 // The name says it all
