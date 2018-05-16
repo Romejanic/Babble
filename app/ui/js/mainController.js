@@ -40,6 +40,30 @@ ngApp.controller("messageApp", function($scope) {
             password: password
         });
     };
+    $scope.initialSetup = function() {
+        var name = $scope.setup_name;
+        var password = $scope.setup_password;
+        var passwordConf = $scope.setup_password_conf;
+
+        if(!name || !name.trim().length <= 0) {
+            $scope.status = "Please enter a valid name!";
+            return;
+        }
+        if(!password || !password.trim().length <= 0) {
+            $scope.status = "Please enter a valid password!";
+            return;
+        }
+        if(password !== passwordConf) {
+            $scope.status = "The two passwords you entered do not match!";
+            return;
+        }
+        
+        $scope.status = undefined;
+        ipcRenderer.send("updateDetails", {
+            name: name,
+            password: password
+        });
+    };
 
     $scope.messageSent = function() {
         if(!$scope.selectedConvo) {

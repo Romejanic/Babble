@@ -89,7 +89,7 @@
                 <input ng-model="setup_password_conf" name="password-conf" placeholder="Confirm password..." type="password" /><br>
             </div>
             <span>Ready to go?</span>
-            <button>Sure am!</button>
+            <button ng-click="initialSetup()">Sure am!</button>
             <span class="status" ng-if="status">{{ status }}</span>
         </div>
     </div>

@@ -93,6 +93,24 @@ ipcMain.on("connect", (event, credentials) => {
     data.userProfile.login = credentials;
     doConnect();
 });
+ipcMain.on("updateDetails", (event, profile) => {
+    if(profile.id) {
+        data.userProfile.id = profile.id;
+    }
+    if(profile.name) {
+        data.userProfile.name = profile.name;
+    }
+    if(profile.profilePic) {
+        data.userProfile.profilePic = profile.profilePic;
+    }
+    client.sendPacket({
+        id: "update_details",
+        payload: profile
+    });
+});
+ipcMain.on("sendPacket", (event, packet) => {
+    client.sendPacket(packet);
+});
 
 function doConnect() {
     client.connect(data.userProfile.login.connectionCode, data.userProfile.login, (err) => {
