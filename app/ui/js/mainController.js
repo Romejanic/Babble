@@ -31,9 +31,8 @@ ngApp.controller("messageApp", function($scope) {
             $scope.status = "Please enter a valid password!";
             return;
         }
-        $scope.status = undefined;
 
-        console.log("connection_code:", connection_code, "username:", username, "password:", password);
+        $scope.status = undefined;
         ipcRenderer.send("connect", {
             connectionCode: connection_code,
             username: username,
@@ -57,12 +56,15 @@ ngApp.controller("messageApp", function($scope) {
             $scope.status = "The two passwords you entered do not match!";
             return;
         }
-        
+
         $scope.status = undefined;
         ipcRenderer.send("updateDetails", {
             name: name,
             password: password
         });
+
+        $scope.firstLogin = false;
+        $scope.$apply();
     };
 
     $scope.messageSent = function() {
