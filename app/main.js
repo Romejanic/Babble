@@ -121,6 +121,13 @@ ipcMain.on("updateDetails", (event, profile) => {
 ipcMain.on("sendPacket", (event, packet) => {
     client.sendPacket(packet);
 });
+ipcMain.on("createConversation", (event, conversation) => {
+    data.conversations.push(conversation);
+    client.sendPacket({
+        id: "create_conversation",
+        payload: conversation
+    });
+});
 
 function doConnect() {
     if(client.isConnected()) {

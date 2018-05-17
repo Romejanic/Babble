@@ -17,6 +17,34 @@ ngApp.controller("messageApp", function($scope) {
             id: "get_users"
         });
     };
+    $scope.doCreateConversation = function() {
+        if(!$scope.convoName || $scope.convoName.trim().length <= 0) {
+            alert("Please enter a valid conversation name!");
+            return;
+        }
+        var name = $scope.convoName.trim();
+        var members = [];
+        $scope.users.forEach((v) => {
+            if(!v.self && v.selected) {
+                delete v.selected;
+                members.push(v);
+            }
+        });
+        if(members.length <= 0) {
+            alert("Please select someone to add!");
+            return;
+        }
+
+        var conversation = {
+            name: name,
+            members: members,
+            image: null,
+            chatHistory: []
+        };
+        $scope.conversations.push(conversation);
+        $scope.select(conversation);
+        ipcRenderer.send("createConversation", conversation);
+    };
     $scope.toggleNewUser = function(user) {
         if(user.self) {
             return;
