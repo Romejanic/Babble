@@ -19,6 +19,7 @@ const client = function() {
 
             this.socket = net.createConnection(port, hostname, () => {
                 console.log("Connected to server!");
+                this.socket.isConnected = true;
             });
             this.socket.on("data", this.handleMessage);
             this.socket.on("error", (err) => {
@@ -26,6 +27,7 @@ const client = function() {
             });
             this.socket.on("close", () => {
                 console.log("Disconnected from server.");
+                this.socket.isConnected = false;
             });
         },
         disconnect: function() {
@@ -84,12 +86,19 @@ const client = function() {
         },
 
         handlePacket: function(packet) {
-            console.log("packet recieved:", packet);
             if(packet.id == "request_auth") {
-                obj.sendPacket({
-                    id: "authenticate",
-                    payload: obj.client.credentials
-                });
+                if(obj.client.credentials) {
+                    obj.sendPacket({
+                        id: "authenticate",
+                        payload: obj.client.credentials
+                    });
+                    delete obj.client.credentials;
+                } else {
+                    obj.sendPacket({
+                        id: "bad_request",
+                        payload: "auth_already_requested"
+                    });
+                }
             } else if(packet.id == "login_status") {
                 if(packet.payload.success) {
                     obj.client.user_data = packet.payload.userId;
@@ -103,6 +112,10 @@ const client = function() {
                     obj.callback(packet.payload.error);
                 }
             }
+        },
+
+        isConnected: function() {
+            return obj.socket && obj.socket.isConnected;
         }
     };
     rsa.generateKeypair();

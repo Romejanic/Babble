@@ -113,6 +113,9 @@ ipcMain.on("sendPacket", (event, packet) => {
 });
 
 function doConnect() {
+    if(client.isConnected()) {
+        return;
+    }
     client.connect(data.userProfile.login.connectionCode, data.userProfile.login, (err) => {
         if(err) {
             mainWindow.webContents.send("connectStatus", {

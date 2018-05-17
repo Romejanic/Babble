@@ -44,8 +44,6 @@ ngApp.controller("messageApp", function($scope) {
         var password = document.getElementById("setup_password").value;
         var passwordConf = document.getElementById("setup_password_conf").value;
 
-        console.log(name, password, passwordConf);
-
         if(!name || name.trim().length <= 0) {
             $scope.status = "Please enter a valid name!";
             return;
