@@ -14,7 +14,8 @@ var data = {
             password: null
         }
     },
-    conversations: []
+    conversations: [],
+    users: []
 };
 
 var mainWindow = null;
@@ -58,6 +59,11 @@ app.on("ready", function() {
         setUserInfo(data.id, data.name);
         if(data.firstLogin) {
             mainWindow.webContents.send("first-login");
+        }
+    };
+    client.onPacket = function(packet) {
+        if(packet.id === "user_list") {
+            setUserList(packet.payload);
         }
     };
 });
@@ -144,7 +150,15 @@ function isMac() {
 function setUserInfo(id, name) {
     data.userProfile.id = id;
     data.userProfile.name = name;
+    client.sendPacket({
+        id: "get_users"
+    });
     mainWindow.webContents.send("getUserData", data);
+}
+
+function setUserList(users) {
+    data.users = users;
+    mainWindow.webContents.send("users", users);
 }
 
 function buildMenu() {

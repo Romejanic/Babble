@@ -18,10 +18,6 @@ ngApp.controller("messageApp", function($scope) {
         user.selected = !user.selected;
     };
 
-    for(var i = 0; i < 10; i++) {
-        $scope.users.push({ name: "Test Person #" + (i+1), image: "img/avatars/default.png" });
-    }
-
     $scope.connect = function() {
         var connection_code = document.getElementById("connection_code").value;
         var username = document.getElementById("username").value;
@@ -115,6 +111,13 @@ ngApp.controller("messageApp", function($scope) {
         return moment(epoch).fromNow();
     };
 
+    // Remove redundant listeners from old windows
+    ipcRenderer.removeAllListeners("getUserData");
+    ipcRenderer.removeAllListeners("requiresLogin");
+    ipcRenderer.removeAllListeners("connectStatus");
+    ipcRenderer.removeAllListeners("first-login");
+    ipcRenderer.removeAllListeners("users");
+
     ipcRenderer.on("getUserData", (event, data) => {
         $scope.userProfile = {
             id: data.userProfile.id,
@@ -141,6 +144,10 @@ ngApp.controller("messageApp", function($scope) {
         $scope.firstLogin = true;
         $scope.setup_name = $scope.userProfile.name;
 
+        $scope.$apply();
+    });
+    ipcRenderer.on("users", (event, users) => {
+        $scope.users = users;
         $scope.$apply();
     });
     ipcRenderer.send("getUserData");
