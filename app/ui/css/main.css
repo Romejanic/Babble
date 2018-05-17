@@ -306,6 +306,74 @@ span.members {
     opacity: 1;
 }
 
+.new-conversation {
+    overflow-y: scroll;
+}
+.new-conversation .form {
+    max-width: 370px;
+    height: 75px;
+    margin: 0 auto;
+}
+.new-conversation .form .image {
+    width: 75px;
+    height: 75px;
+    border: 0.5px solid lightgray;
+    border-radius: 100%;
+    float: left;
+}
+.new-conversation .form input[type=text] {
+    width: calc(100% - 90px);
+    border: none;
+    border-bottom: 1px solid lightgray;
+    outline: none;
+    float: right;
+    font-size: 1em;
+    margin-top: calc(75px / 4);
+}
+.new-conversation .members {
+    width: 100%;
+    height: 250px;
+    margin-top: 15px;
+    border: 1px solid lightgray;
+    border-left: none;
+    border-right: none;
+}
+.new-conversation .members input.search {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid lightgray;
+    font-size: 1em;
+}
+.new-conversation .members .user-list {
+    overflow-y: scroll;
+    height: calc(250px - 29px);
+    padding-top: 5px;
+}
+.new-conversation .members .user {
+    height: 75px;
+    margin-bottom: 5px;
+    transition: 0.25s;
+}
+.new-conversation .members .user:hover {
+    background-color: rgba(54, 54, 54, 0.25);
+}
+.new-conversation .members .user.selected {
+    background-color: rgba(54, 255, 54, 0.25);
+}
+.new-conversation .members .user img {
+    width: 75px;
+    height: 75px;
+    border-radius: 100%;
+    float: left;
+}
+.new-conversation .members .user span.name {
+    line-height: 75px;
+    font-size: 1.25em;
+    text-align: left;
+    float: left;
+    margin-left: 10px;
+}
+
 .login-form {
     position: fixed;
     top: 0px;
@@ -349,17 +417,17 @@ span.members {
     margin-bottom: 5px;
     box-sizing: border-box;
 }
-.login-form .content button {
+.login-form .content button, .new-conversation button {
     width: 100%;
     height: 30px;
     font-size: 1em;
-    color: blue;
+    color: rgb(0, 122, 255);
     margin-top: 10px;
     border: none;
     background: none;
     transition: 0.25s;
 }
-.login-form .content button:hover {
+.login-form .content button:hover, .new-conversation button:hover {
     background-color: rgba(54, 54, 54, 0.25);
 }
 .login-form .status {

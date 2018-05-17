@@ -5,6 +5,7 @@ var ngApp = angular.module("main", []);
 
 ngApp.controller("messageApp", function($scope) {
     $scope.conversations = [];
+    $scope.users = [];
     $scope.selectedConvo = null;
     $scope.select = function(convo) {
         $scope.activeScreen = "conversation";
@@ -13,6 +14,13 @@ ngApp.controller("messageApp", function($scope) {
     $scope.createConversation = function() {
         $scope.activeScreen = "newConversation";
     };
+    $scope.toggleNewUser = function(user) {
+        user.selected = !user.selected;
+    };
+
+    for(var i = 0; i < 10; i++) {
+        $scope.users.push({ name: "Test Person #" + (i+1), image: "img/avatars/default.png" });
+    }
 
     $scope.connect = function() {
         var connection_code = document.getElementById("connection_code").value;

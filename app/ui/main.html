@@ -55,8 +55,21 @@
             </div>
         </div>
         <div class="content new-conversation" ng-class="{hidden: activeScreen != 'newConversation' }">
-            <input class="title" />
-            <div class="image"></div>
+            <h1>Create Conversation</h1>
+            <div class="form">
+                <img src="img/avatars/default.png" class="image" />
+                <input ng-model="convoName" type="text" placeholder="Conversation Name..." />
+            </div>
+            <div class="members">
+                <input class="search" placeholder="Search..." ng-model="conversationMemberSearch" />
+                <div class="user-list">
+                    <div class="user" ng-click="toggleNewUser(user)" ng-class="{ selected: user.selected }" ng-repeat="user in users | filter:conversationMemberSearch">
+                        <img ng-src="{{ user.image }}" class="thumb" />
+                        <span class="name">{{ user.name }}</span>
+                    </div>
+                </div>
+            </div>
+            <button>Create</button>
         </div>
     </div>
     <div class="login-form" role="login" ng-if="requiresLogin">
