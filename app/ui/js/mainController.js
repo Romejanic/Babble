@@ -13,8 +13,14 @@ ngApp.controller("messageApp", function($scope) {
     };
     $scope.createConversation = function() {
         $scope.activeScreen = "newConversation";
+        ipcRenderer.send("sendPacket", {
+            id: "get_users"
+        });
     };
     $scope.toggleNewUser = function(user) {
+        if(user.self) {
+            return;
+        }
         user.selected = !user.selected;
     };
 

@@ -111,6 +111,8 @@ const client = function() {
                     console.error("Login failed: " + packet.payload.error);
                     obj.callback(packet.payload.error);
                 }
+            } else if(obj.onPacket) {
+                obj.onPacket(packet);
             }
         },
 

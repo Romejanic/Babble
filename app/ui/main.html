@@ -64,8 +64,8 @@
                 <input class="search" placeholder="Search..." ng-model="conversationMemberSearch" />
                 <div class="user-list">
                     <div class="user" ng-click="toggleNewUser(user)" ng-class="{ selected: user.selected }" ng-repeat="user in users | filter:conversationMemberSearch">
-                        <img ng-src="{{ user.image }}" class="thumb" />
-                        <span class="name">{{ user.name }}</span>
+                        <img ng-src="{{ user.image || 'img/avatars/default.png' }}" class="thumb" />
+                        <span class="name">{{ user.name + (user.self ? ' (you)' : '') }}</span>
                     </div>
                 </div>
             </div>

@@ -91,6 +91,10 @@ ipcMain.on("getUserData", (event) => {
     var requiresLogin = !loginData || !loginData.connectionCode || !loginData.username || !loginData.password;
     mainWindow.webContents.send("requiresLogin", requiresLogin);
 
+    if(data.users && data.users.length > 0) {
+        mainWindow.webContents.send("users", data.users);
+    }
+
     if(loginData && loginData.connectionCode && loginData.username && loginData.password) {
         doConnect();
     }
