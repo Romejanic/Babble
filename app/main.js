@@ -65,13 +65,29 @@ app.on("ready", function() {
         if(packet.id === "user_list") {
             setUserList(packet.payload);
         } else if(packet.id == "conversation_created") {
-            for(var i = 0; i < data.conversations.length; i++) {
-                if(data.conversations[i].name == packet.payload.name) {
-                    data.conversations[i].id = packet.payload.id;
-                    mainWindow.webContents.send("getUserData", data);
-                    break;
+            var convo;
+            if((convo = getConversationByName(packet.payload.name))) {
+                convo.id = packet.payload.id;
+                mainWindow.webContents.send("getUserData", data);
+            }  
+        } else if(packet.id == "message") {
+            var convo;
+            if((convo = getConversationById(packet.payload.conversation))) {
+                packet.payload.timestamp = Date.now();
+                convo.chatHistory.push(packet.payload);
+                if(!mainWindow.isFocused() && Notification.isSupported()) {
+                    const notif = new Notification({
+                        title: getUserById(packet.payload.sender) + " to " + convo.name,
+                        body: packet.payload.content
+                    });
+                    notif.on("click", (e) => {
+                        mainWindow.focus();
+                        mainWindow.webContents.send("focusConveration", convo.id);
+                    });
                 }
-            }   
+            }
+        } else if(packet.id == "new_messages") {
+
         }
     };
 });
@@ -100,6 +116,7 @@ ipcMain.on("sendMessage", (event, message) => {
         return;
     }
     conversation.chatHistory.push(message);
+    delete message.timestamp;
     client.sendPacket({
         id: "message",
         payload: message
@@ -154,6 +171,31 @@ ipcMain.on("createConversation", (event, conversation) => {
         payload: conversation
     });
 });
+
+function getConversationById(id) {
+    for(var i = 0; i < data.conversations.length; i++) {
+        if(data.conversations[i].id == id) {
+            return data.conversations[i];
+        }
+    }
+    return undefined;
+}
+function getConversationByName(name) {
+    for(var i = 0; i < data.conversations.length; i++) {
+        if(data.conversations[i].name == name) {
+            return data.conversations[i];
+        }
+    }
+    return undefined;
+}
+function getUserById(id) {
+    for(var i = 0; i < data.users.length; i++) {
+        if(data.users[i].id == id) {
+            return data.users[i];
+        }
+    }
+    return undefined;
+}
 
 function doConnect() {
     if(client.isConnected()) {

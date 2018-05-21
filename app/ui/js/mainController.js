@@ -124,18 +124,14 @@ ngApp.controller("messageApp", function($scope) {
             return;
         }
         $scope.messageInput = "";
-        $scope.selectedConvo.chatHistory.push({
-            type: "text",
+        var msg = {
             sender: $scope.userProfile.id,
             content: msg,
-            timestamp: Date.now()
-        });
-        ipcRenderer.send("sendMessage", {
-            conversation: $scope.selectedConvo.id,
-            sender: $scope.userProfile.id,
             type: "text",
-            content: msg
-        });
+            timestamp: Date.now()
+        };
+        $scope.selectedConvo.chatHistory.push(msg);
+        ipcRenderer.send("sendMessage", msg);
         setTimeout(() => {
             $scope.$apply();
             document.querySelector(".message-list").scrollTo(0, Number.MAX_VALUE);
@@ -173,6 +169,7 @@ ngApp.controller("messageApp", function($scope) {
     ipcRenderer.removeAllListeners("connectStatus");
     ipcRenderer.removeAllListeners("first-login");
     ipcRenderer.removeAllListeners("users");
+    ipcRenderer.removeAllListeners("focusConversation");
 
     ipcRenderer.on("getUserData", (event, data) => {
         $scope.userProfile = {
@@ -212,6 +209,13 @@ ngApp.controller("messageApp", function($scope) {
     ipcRenderer.on("users", (event, users) => {
         $scope.users = users;
         $scope.$apply();
+    });
+    ipcRenderer.on("focusConversation", (event, id) => {
+        $scope.conversations.forEach((v) => {
+            if(v.id == id) {
+                $scope.select(v);
+            }
+        });
     });
     ipcRenderer.send("getUserData");
 
