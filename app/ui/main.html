@@ -41,10 +41,10 @@
                 </div>
             </div>
             <div class="message-list">
-                <div class="message" ng-repeat="msg in selectedConvo.chatHistory" ng-class="{mine: msg.sender == 'you'}">
+                <div class="message" ng-repeat="msg in selectedConvo.chatHistory" ng-class="{mine: msg.sender == userProfile.id}">
                     <div class="message-content">{{ msg.content }}</div>
                     <img class="message-avatar" ng-src="{{selectedConvo.image || 'img/avatars/default.png'}}" ng-if="msg.sender != 'you'" />
-                    <span class="message-name" title="Sent by {{ msg.sender }} {{ formatTimestamp(msg.timestamp) }}">{{ msg.sender }}</span>
+                    <span class="message-name" title="Sent by {{ getUserNameFromId(msg.sender) }} {{ formatTimestamp(msg.timestamp) }}">{{ getUserNameFromId(msg.sender) }}</span>
                 </div>
             </div>
             <div class="message-bar">

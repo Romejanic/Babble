@@ -126,12 +126,13 @@ ngApp.controller("messageApp", function($scope) {
         $scope.messageInput = "";
         $scope.selectedConvo.chatHistory.push({
             type: "text",
-            sender: "you",
+            sender: $scope.userProfile.id,
             content: msg,
             timestamp: Date.now()
         });
         ipcRenderer.send("sendMessage", {
             conversation: $scope.selectedConvo.id,
+            sender: $scope.userProfile.id,
             type: "text",
             content: msg
         });
@@ -153,6 +154,17 @@ ngApp.controller("messageApp", function($scope) {
 
     $scope.formatTimestamp = function(epoch) {
         return moment(epoch).fromNow();
+    };
+    $scope.getUserNameFromId = function(id) {
+        if(id == $scope.userProfile.id) {
+            return "you";
+        }
+        for(var i = 0; i < $scope.users.length; i++) {
+            if($scope.users[i].id == id) {
+                return $scope.users[i].name;
+            }
+        }
+        return String(id);
     };
 
     // Remove redundant listeners from old windows
