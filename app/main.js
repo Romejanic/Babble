@@ -89,7 +89,21 @@ app.on("will-quit", () => {
 });
 
 ipcMain.on("sendMessage", (event, message) => {
-    // TODO: send to server
+    var conversation;
+    data.conversations.forEach((v) => {
+        if(v.id == message.conversation) {
+            conversation = v;
+        }
+    });
+    if(!conversation) {
+        console.error("Error: Tried to send message to conversation that doesn't exist...");
+        return;
+    }
+    conversation.chatHistory.push(message);
+    client.sendPacket({
+        id: "message",
+        payload: message
+    });
 });
 ipcMain.on("getUserData", (event) => {
     event.sender.send("getUserData", data);
