@@ -22,6 +22,12 @@ ngApp.controller("messageApp", function($scope) {
             alert("Please enter a valid conversation name!");
             return;
         }
+        $scope.conversations.forEach((v) => {
+            if(v.name == $scope.convoName) {
+                alert("That conversation name is already taken!");
+                return;
+            }
+        });
         var name = $scope.convoName.trim();
         var members = [];
         $scope.users.forEach((v) => {
@@ -109,6 +115,10 @@ ngApp.controller("messageApp", function($scope) {
         if(!$scope.selectedConvo) {
             return;
         }
+        if(!$scope.selectedConvo.id) {
+            alert("Please wait for a response from the server.");
+            return;
+        }
         var msg = $scope.messageInput;
         if(!msg || (msg = msg.trim()).length < 0) {
             return;
@@ -121,7 +131,7 @@ ngApp.controller("messageApp", function($scope) {
             timestamp: Date.now()
         });
         ipcRenderer.send("sendMessage", {
-            conversation: $scope.selectedConvo,
+            conversation: $scope.selectedConvo.id,
             type: "text",
             content: msg
         });
@@ -159,6 +169,13 @@ ngApp.controller("messageApp", function($scope) {
             profilePic: data.userProfile.profilePic
         };
         $scope.conversations = data.conversations;
+        if($scope.selectedConvo) {
+            data.conversations.forEach((v, i) => {
+                if(v.name == $scope.selectedConvo.name) {
+                    $scope.selectedConvo = $scope.conversations[i];
+                }
+            });
+        }
     });
     ipcRenderer.on("requiresLogin", (event, requiresLogin) => {
         if(requiresLogin) {

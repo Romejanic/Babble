@@ -64,6 +64,14 @@ app.on("ready", function() {
     client.onPacket = function(packet) {
         if(packet.id === "user_list") {
             setUserList(packet.payload);
+        } else if(packet.id == "conversation_created") {
+            for(var i = 0; i < data.conversations.length; i++) {
+                if(data.conversations[i].name == packet.payload.name) {
+                    data.conversations[i].id = packet.payload.id;
+                    mainWindow.webContents.send("getUserData", data);
+                    break;
+                }
+            }   
         }
     };
 });
@@ -81,7 +89,6 @@ app.on("will-quit", () => {
 });
 
 ipcMain.on("sendMessage", (event, message) => {
-    console.log(message);
     // TODO: send to server
 });
 ipcMain.on("getUserData", (event) => {
@@ -123,6 +130,11 @@ ipcMain.on("sendPacket", (event, packet) => {
 });
 ipcMain.on("createConversation", (event, conversation) => {
     data.conversations.push(conversation);
+    var memberArray = conversation.members;
+    conversation.members = [];
+    memberArray.forEach((v) => {
+        conversation.members.push(v.id);
+    });
     client.sendPacket({
         id: "create_conversation",
         payload: conversation
