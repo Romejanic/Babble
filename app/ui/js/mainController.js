@@ -237,7 +237,6 @@ ngApp.controller("messageApp", function($scope) {
         });
     });
     ipcRenderer.on("newMessage", (event, message) => {
-        console.log("event newMessage recieved", message, remote.getCurrentWindow());
         if(!remote.getCurrentWindow().isFocused()) {
             var sender = $scope.getUser(message.sender);
             var convo  = $scope.getConvo(message.conversation);
@@ -248,6 +247,9 @@ ngApp.controller("messageApp", function($scope) {
             notif.onClick = (e) => {
                 remote.getCurrentWindow().focus();
                 $scope.select(convo);
+                setTimeout(() => {
+                    document.querySelector(".message-list").scrollTo(0, Number.MAX_VALUE);
+                }, 20);
             };
         }
     });

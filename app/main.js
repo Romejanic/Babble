@@ -79,7 +79,10 @@ app.on("ready", function() {
                 mainWindow.webContents.send("newMessage", packet.payload);
             }
         } else if(packet.id == "new_messages") {
-
+            
+        } else if(packet.id == "new_conversation") {
+            data.conversations.push(packet.payload);
+            mainWindow.webContents.send("getUserData", data);
         }
     };
 });
