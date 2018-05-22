@@ -127,6 +127,7 @@ ngApp.controller("messageApp", function($scope) {
         var msg = {
             sender: $scope.userProfile.id,
             content: msg,
+            conversation: $scope.selectedConvo.id,
             type: "text",
             timestamp: Date.now()
         };
@@ -146,6 +147,23 @@ ngApp.controller("messageApp", function($scope) {
     };
     $scope.showMembers = function() {
         dissapointUser("show all members added to this conversation.");
+    };
+
+    $scope.getUser = function(id) {
+        for(var i = 0; i < $scope.users.length; i++) {
+            if($scope.users[i].id == id) {
+                return $scope.users[i];
+            }
+        }
+        return undefined;
+    };
+    $scope.getConvo = function(id) {
+        for(var i = 0; i < $scope.conversations.length; i++) {
+            if($scope.conversations[i].id == id) {
+                return $scope.conversations[i];
+            }
+        }
+        return undefined;
     };
 
     $scope.formatTimestamp = function(epoch) {
@@ -170,6 +188,7 @@ ngApp.controller("messageApp", function($scope) {
     ipcRenderer.removeAllListeners("first-login");
     ipcRenderer.removeAllListeners("users");
     ipcRenderer.removeAllListeners("focusConversation");
+    ipcRenderer.removeAllListeners("newMessages");
 
     ipcRenderer.on("getUserData", (event, data) => {
         $scope.userProfile = {
@@ -216,6 +235,21 @@ ngApp.controller("messageApp", function($scope) {
                 $scope.select(v);
             }
         });
+    });
+    ipcRenderer.on("newMessage", (event, message) => {
+        console.log("event newMessage recieved");
+        if(!remote.getCurrentWindow().isFocused()) {
+            var sender = $scope.getUser(message.sender);
+            var convo  = $scope.getConversation(message.conversation);
+            const options = {
+                body: packet.payload.content
+            };
+            const notif = new Notification(sender.name + " to " + convo.name, options);
+            notif.onClick = (e) => {
+                remote.getCurrentWindow().focus();
+                $scope.select(convo);
+            };
+        }
     });
     ipcRenderer.send("getUserData");
 

@@ -71,20 +71,12 @@ app.on("ready", function() {
                 mainWindow.webContents.send("getUserData", data);
             }  
         } else if(packet.id == "message") {
-            var convo;
-            if((convo = getConversationById(packet.payload.conversation))) {
+            var convo = getConversationById(packet.payload.conversation);
+            if(convo) {
                 packet.payload.timestamp = Date.now();
                 convo.chatHistory.push(packet.payload);
-                if(!mainWindow.isFocused() && Notification.isSupported()) {
-                    const notif = new Notification({
-                        title: getUserById(packet.payload.sender) + " to " + convo.name,
-                        body: packet.payload.content
-                    });
-                    notif.on("click", (e) => {
-                        mainWindow.focus();
-                        mainWindow.webContents.send("focusConveration", convo.id);
-                    });
-                }
+                mainWindow.webContents.send("getUserData");
+                mainWindow.webContents.send("newMessage", packet.payload);
             }
         } else if(packet.id == "new_messages") {
 
@@ -105,12 +97,7 @@ app.on("will-quit", () => {
 });
 
 ipcMain.on("sendMessage", (event, message) => {
-    var conversation;
-    data.conversations.forEach((v) => {
-        if(v.id == message.conversation) {
-            conversation = v;
-        }
-    });
+    var conversation = getConversationById(message.conversation);
     if(!conversation) {
         console.error("Error: Tried to send message to conversation that doesn't exist...");
         return;
