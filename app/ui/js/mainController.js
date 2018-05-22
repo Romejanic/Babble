@@ -188,7 +188,7 @@ ngApp.controller("messageApp", function($scope) {
     ipcRenderer.removeAllListeners("first-login");
     ipcRenderer.removeAllListeners("users");
     ipcRenderer.removeAllListeners("focusConversation");
-    ipcRenderer.removeAllListeners("newMessages");
+    ipcRenderer.removeAllListeners("newMessage");
 
     ipcRenderer.on("getUserData", (event, data) => {
         $scope.userProfile = {
@@ -237,12 +237,12 @@ ngApp.controller("messageApp", function($scope) {
         });
     });
     ipcRenderer.on("newMessage", (event, message) => {
-        console.log("event newMessage recieved");
+        console.log("event newMessage recieved", message, remote.getCurrentWindow());
         if(!remote.getCurrentWindow().isFocused()) {
             var sender = $scope.getUser(message.sender);
-            var convo  = $scope.getConversation(message.conversation);
+            var convo  = $scope.getConvo(message.conversation);
             const options = {
-                body: packet.payload.content
+                body: message.content
             };
             const notif = new Notification(sender.name + " to " + convo.name, options);
             notif.onClick = (e) => {

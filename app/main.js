@@ -75,7 +75,7 @@ app.on("ready", function() {
             if(convo) {
                 packet.payload.timestamp = Date.now();
                 convo.chatHistory.push(packet.payload);
-                mainWindow.webContents.send("getUserData");
+                mainWindow.webContents.send("getUserData", data);
                 mainWindow.webContents.send("newMessage", packet.payload);
             }
         } else if(packet.id == "new_messages") {
