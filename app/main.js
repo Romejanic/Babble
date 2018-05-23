@@ -71,15 +71,12 @@ app.on("ready", function() {
                 mainWindow.webContents.send("getUserData", data);
             }  
         } else if(packet.id == "message") {
-            var convo = getConversationById(packet.payload.conversation);
-            if(convo) {
-                packet.payload.timestamp = Date.now();
-                convo.chatHistory.push(packet.payload);
-                mainWindow.webContents.send("getUserData", data);
-                mainWindow.webContents.send("newMessage", packet.payload);
-            }
+            onMessageRecieved(packet.payload);
         } else if(packet.id == "new_messages") {
-            
+            packet.payload.forEach((msg) => {
+                onMessageRecieved(packet.payload, true);
+            });
+            mainWindow.webContents.send("getUserData", data);
         } else if(packet.id == "new_conversation") {
             data.conversations.push(packet.payload);
             mainWindow.webContents.send("getUserData", data);
@@ -185,6 +182,18 @@ function getUserById(id) {
         }
     }
     return undefined;
+}
+
+function onMessageRecieved(message, addOnly = false) {
+    var convo = getConversationById(message.conversation);
+    if(convo) {
+        message.timestamp = Date.now();
+        convo.chatHistory.push(message);
+        if(!addOnly) {
+            mainWindow.webContents.send("getUserData", data);
+            mainWindow.webContents.send("newMessage", message);
+        }
+    }
 }
 
 function doConnect() {
