@@ -29,7 +29,7 @@ ngApp.controller("messageApp", function($scope) {
             }
         });
         var name = $scope.convoName.trim();
-        var members = [];
+        var members = [ $scope.userProfile.id ];
         $scope.users.forEach((v) => {
             if(!v.self && v.selected) {
                 delete v.selected;

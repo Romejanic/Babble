@@ -52,7 +52,7 @@ function createMainWindow() {
 }
 
 app.on("ready", function() {
-    //buildMenu();
+    buildMenu();
     createMainWindow();
 
     client.onLoggedIn = function(data) {
@@ -80,6 +80,10 @@ app.on("ready", function() {
         } else if(packet.id == "new_conversation") {
             data.conversations.push(packet.payload);
             mainWindow.webContents.send("getUserData", data);
+            if(packet.payload.chatHistory && packet.payload.chatHistory.length > 0) {
+                var lastIndex = packet.payload.chatHistory.length - 1;
+                mainWindow.webContents.send("newMessage", packet.payload.chatHistory[lastIndex]);
+            }
         } else if(packet.id == "sync_convos") {
             var unknown = [];
             packet.payload.forEach((v) => {
@@ -205,6 +209,11 @@ function onMessageRecieved(message, addOnly = false) {
             mainWindow.webContents.send("getUserData", data);
             mainWindow.webContents.send("newMessage", message);
         }
+    } else {
+        client.sendPacket({
+            id: "sync_convos",
+            payload: [ message.conversation ]
+        });
     }
 }
 
