@@ -56,13 +56,13 @@ const client = function() {
                 if(obj.client.encryption.aesKey) {
                     // packetStr = rsa.decryptVerified(data, obj.client.server_public_key);
                     // packetStr = rsa.decrypt(data, rsa.rsaKeys.private);
-                    packetStr = obj.client.encryption.decrypt(data);
+                    packetStr = obj.client.encryption.decrypt(data.toString());
                 } else {
                     packetStr = data.toString();
                 }
                 var packet = JSON.parse(packetStr);
                 if(!obj.client.encryption.aesKey) {
-                    obj.client.encryption.handleKeyExchangePacket(packet, socket);
+                    obj.client.encryption.handleKeyExchangePacket(data, this);
                 } else {
                     obj.handlePacket(packet);
                 }

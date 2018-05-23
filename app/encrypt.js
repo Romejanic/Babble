@@ -1,6 +1,6 @@
 const crypto = require("crypto");
 
-const aesCipher   = "aes-128-cbc";
+const aesCipher   = "aes-256-cbc";
 const primeLength = 1024;
 
 const encrypt = function() {
@@ -9,6 +9,8 @@ const encrypt = function() {
         keyExchangeKey: undefined,
         aesIv: undefined,
         aesKey: undefined,
+
+        onAesKeyGenerated: undefined,
 
         createKeyExchange: function(prime, generator) {
             if(!prime && !generator) {
@@ -21,13 +23,17 @@ const encrypt = function() {
             this.keyExchangeKey = this.keyExchange.generateKeys("base64");
         },
         calculateSecret: function(otherKey, aesIv) {
-            this.aesKey = this.keyExchange.computeSecret(Buffer.from(otherKey, "base64")).slice(0, 16);
+            this.aesKey = this.keyExchange.computeSecret(Buffer.from(otherKey, "base64"));
+            this.aesKey = crypto.createHash("sha256").update(this.aesKey).digest();
             if(!aesIv) {
                 this.aesIv = crypto.randomBytes(16);
             } else {
                 this.aesIv = Buffer.from(aesIv, "base64");
             }
             this.aesKey = Buffer.from(this.aesKey);
+            if(this.onAesKeyGenerated) {
+                this.onAesKeyGenerated();
+            }
         },
         sendKeyExchangePacket: function(socket) {
             if(!this.keyExchange.isInitial) {
@@ -43,15 +49,10 @@ const encrypt = function() {
         },
         handleKeyExchangePacket: function(data, socket) {
             try {
-                var obj = data;
-                if(typeof obj == "string") {
-                    var str = data.toString();
-                    obj = JSON.parse(str);
-                    if(!obj.id || !obj.payload) {
-                        throw "Invalid packet format";
-                    }
-                } else if(typeof obj != "object") {
-                    throw "Data must be object or string";
+                var str = data.toString();
+                var obj = JSON.parse(str);
+                if(!obj.id || !obj.payload) {
+                    throw "Invalid packet format";
                 }
 
                 if(obj.id == "key_exchange_prime") {
