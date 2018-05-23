@@ -80,6 +80,19 @@ app.on("ready", function() {
         } else if(packet.id == "new_conversation") {
             data.conversations.push(packet.payload);
             mainWindow.webContents.send("getUserData", data);
+        } else if(packet.id == "sync_convos") {
+            var unknown = [];
+            packet.payload.forEach((v) => {
+                if(!getConversationById(v)) {
+                    unknown.push(v);
+                }
+            });
+            if(unknown.length > 0) {
+                client.sendPacket({
+                    id: "sync_convos",
+                    payload: unknown
+                });
+            }
         }
     };
 });
@@ -103,7 +116,6 @@ ipcMain.on("sendMessage", (event, message) => {
         return;
     }
     conversation.chatHistory.push(message);
-    delete message.timestamp;
     client.sendPacket({
         id: "message",
         payload: message
