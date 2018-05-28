@@ -78,6 +78,9 @@ app.on("ready", function() {
             });
             mainWindow.webContents.send("getUserData", data);
         } else if(packet.id == "new_conversation") {
+            if(getConversationById(packet.payload.id) || getConversationByName(packet.payload.name)) {
+                return;
+            }
             data.conversations.push(packet.payload);
             mainWindow.webContents.send("getUserData", data);
             if(packet.payload.chatHistory && packet.payload.chatHistory.length > 0) {
@@ -154,6 +157,9 @@ ipcMain.on("updateDetails", (event, profile) => {
     if(profile.profilePic) {
         data.userProfile.profilePic = profile.profilePic;
     }
+    if(profile.password) {
+        data.userProfile.login.password = profile.password;
+    }
     client.sendPacket({
         id: "update_details",
         payload: profile
@@ -219,6 +225,9 @@ function onMessageRecieved(message, addOnly = false) {
 
 function sendMessageNotification(message) {
     if(!mainWindow || !mainWindow.isFocused()) {
+        if(message.sender == data.userProfile.id) {
+            return;
+        }
         var sender = getUserById(message.sender);
         var convo  = getConversationById(message.conversation);
         const notif = new Notification({
@@ -232,7 +241,22 @@ function sendMessageNotification(message) {
             mainWindow.webContents.send("focusConversation", convo.id);
         });
         notif.on("reply", (e, reply) => {
-            console.log("replied to notification", reply);
+            if(!reply || (reply = reply.trim()).length < 0) {
+                return;
+            }
+            var msg = {
+                sender: data.userProfile.id,
+                content: reply,
+                conversation: convo.id,
+                type: "text",
+                timestamp: Date.now()
+            };
+            convo.chatHistory.push(msg);
+            client.sendPacket({
+                id: "message",
+                payload: msg
+            });
+            mainWindow.webContents.send("getUserData", data);
         });
         notif.show();
     }
