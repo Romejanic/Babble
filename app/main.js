@@ -1,4 +1,4 @@
-const {app, BrowserWindow, Menu, ipcMain} = require("electron");
+const {app, BrowserWindow, Menu, Notification, ipcMain} = require("electron");
 const path = require("path");
 const fs = require("fs");
 const client = require("./client.js")();
@@ -82,7 +82,7 @@ app.on("ready", function() {
             mainWindow.webContents.send("getUserData", data);
             if(packet.payload.chatHistory && packet.payload.chatHistory.length > 0) {
                 var lastIndex = packet.payload.chatHistory.length - 1;
-                mainWindow.webContents.send("newMessage", packet.payload.chatHistory[lastIndex]);
+                sendMessageNotification(packet.payload.chatHistory[lastIndex]);
             }
         } else if(packet.id == "sync_convos") {
             var unknown = [];
@@ -165,7 +165,7 @@ ipcMain.on("sendPacket", (event, packet) => {
 ipcMain.on("createConversation", (event, conversation) => {
     data.conversations.push(conversation);
     var memberArray = conversation.members;
-    conversation.members = [];
+    conversation.members = [data.userProfile.id];
     memberArray.forEach((v) => {
         conversation.members.push(v.id);
     });
@@ -207,13 +207,37 @@ function onMessageRecieved(message, addOnly = false) {
         convo.chatHistory.push(message);
         if(!addOnly) {
             mainWindow.webContents.send("getUserData", data);
-            mainWindow.webContents.send("newMessage", message);
+            sendMessageNotification(message);
         }
     } else {
         client.sendPacket({
             id: "sync_convos",
             payload: [ message.conversation ]
         });
+    }
+}
+
+function sendMessageNotification(message) {
+    if(!mainWindow || !mainWindow.isFocused()) {
+        var sender = getUserById(message.sender);
+        var convo  = getConversationById(message.conversation);
+        const notif = new Notification({
+            title: sender.name + " to " + convo.name,
+            body: message.content,
+            hasReply: true,
+            replyPlaceholder: "Type a message..."
+        });
+        notif.on("click", (e) => {
+            remote.getCurrentWindow().focus();
+            $scope.select(convo);
+            setTimeout(() => {
+                document.querySelector(".message-list").scrollTo(0, Number.MAX_VALUE);
+            }, 20);
+        });
+        notif.on("reply", (e, reply) => {
+            console.log("replied to notification", reply);
+        });
+        notif.show();
     }
 }
 

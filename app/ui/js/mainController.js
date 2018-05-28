@@ -36,7 +36,7 @@ ngApp.controller("messageApp", function($scope) {
                 members.push(v);
             }
         });
-        if(members.length <= 0) {
+        if(members.length <= 1) {
             alert("Please select someone to add!");
             return;
         }
@@ -188,7 +188,6 @@ ngApp.controller("messageApp", function($scope) {
     ipcRenderer.removeAllListeners("first-login");
     ipcRenderer.removeAllListeners("users");
     ipcRenderer.removeAllListeners("focusConversation");
-    ipcRenderer.removeAllListeners("newMessage");
 
     ipcRenderer.on("getUserData", (event, data) => {
         $scope.userProfile = {
@@ -235,23 +234,6 @@ ngApp.controller("messageApp", function($scope) {
                 $scope.select(v);
             }
         });
-    });
-    ipcRenderer.on("newMessage", (event, message) => {
-        if(!remote.getCurrentWindow().isFocused()) {
-            var sender = $scope.getUser(message.sender);
-            var convo  = $scope.getConvo(message.conversation);
-            const options = {
-                body: message.content
-            };
-            const notif = new Notification(sender.name + " to " + convo.name, options);
-            notif.onClick = (e) => {
-                remote.getCurrentWindow().focus();
-                $scope.select(convo);
-                setTimeout(() => {
-                    document.querySelector(".message-list").scrollTo(0, Number.MAX_VALUE);
-                }, 20);
-            };
-        }
     });
     ipcRenderer.send("getUserData");
 
