@@ -351,6 +351,10 @@ var userDataPath = path.join(app.getPath("userData"), "user.dat");
 console.log("User data is stored at:", userDataPath);
 
 function loadUserData() {
+    if(process.argv.length > 2 && process.argv[2] == "--no-save") {
+        console.log("Not loading user data, --no-save flag passed.");
+        return;
+    }
     try {
         if(!fs.existsSync(userDataPath)) {
             return;
@@ -365,6 +369,10 @@ function loadUserData() {
 loadUserData();
 
 function saveUserData() {
+    if(process.argv.length > 2 && process.argv[2] == "--no-save") {
+        console.log("Not saving user data, --no-save flag passed.");
+        return;
+    }
     try {
         var json = JSON.stringify(data);
         fs.writeFile(userDataPath, json, (err) => {
