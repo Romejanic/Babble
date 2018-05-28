@@ -232,6 +232,9 @@ ngApp.controller("messageApp", function($scope) {
         $scope.conversations.forEach((v) => {
             if(v.id == id) {
                 $scope.select(v);
+                setTimeout(() => {
+                    document.querySelector(".message-list").scrollTo(0, Number.MAX_VALUE);
+                }, 30);
             }
         });
     });

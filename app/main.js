@@ -228,11 +228,8 @@ function sendMessageNotification(message) {
             replyPlaceholder: "Type a message..."
         });
         notif.on("click", (e) => {
-            remote.getCurrentWindow().focus();
-            $scope.select(convo);
-            setTimeout(() => {
-                document.querySelector(".message-list").scrollTo(0, Number.MAX_VALUE);
-            }, 20);
+            mainWindow.focus();
+            mainWindow.webContents.send("focusConversation", convo.id);
         });
         notif.on("reply", (e, reply) => {
             console.log("replied to notification", reply);
@@ -258,8 +255,7 @@ function doConnect() {
             };
         } else {
             mainWindow.webContents.send("connectStatus", {
-                success: true,
-
+                success: true
             });
             saveUserData();
         }
