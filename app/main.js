@@ -87,8 +87,8 @@ app.on("ready", function() {
         } else if(packet.id == "sync_convos") {
             var unknown = [];
             packet.payload.forEach((v) => {
-                if(!getConversationById(v)) {
-                    unknown.push(v);
+                if(!getConversationById(v.id)) {
+                    unknown.push(v.id);
                 }
             });
             if(unknown.length > 0) {
