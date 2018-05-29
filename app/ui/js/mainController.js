@@ -7,9 +7,11 @@ ngApp.controller("messageApp", function($scope) {
     $scope.conversations = [];
     $scope.users = [];
     $scope.selectedConvo = null;
+    $scope.memberListOpen = false;
     $scope.select = function(convo) {
-        $scope.activeScreen = "conversation";
-        $scope.selectedConvo = convo;
+        $scope.activeScreen   = "conversation";
+        $scope.memberListOpen = false;
+        $scope.selectedConvo  = convo;
     };
     $scope.createConversation = function() {
         $scope.activeScreen = "newConversation";
@@ -31,7 +33,7 @@ ngApp.controller("messageApp", function($scope) {
         var name = $scope.convoName.trim();
         var members = [ $scope.userProfile.id ];
         $scope.users.forEach((v) => {
-            if(!v.self && v.selected) {
+            if(v && !v.self && v.selected) {
                 delete v.selected;
                 members.push(v);
             }
@@ -151,7 +153,7 @@ ngApp.controller("messageApp", function($scope) {
         dissapointUser("show the files, plans, checklists and other items attached to messages.");
     };
     $scope.showMembers = function() {
-        dissapointUser("show all members added to this conversation.");
+        $scope.memberListOpen = !$scope.memberListOpen;
     };
 
     $scope.getUser = function(id) {
@@ -181,6 +183,17 @@ ngApp.controller("messageApp", function($scope) {
         for(var i = 0; i < $scope.users.length; i++) {
             if($scope.users[i].id == id) {
                 return $scope.users[i].name;
+            }
+        }
+        return String(id);
+    };
+    $scope.getUserImageFromId = function(id) {
+        if(id == $scope.userProfile.id) {
+            return $scope.userProfile.image;
+        }
+        for(var i = 0; i < $scope.users.length; i++) {
+            if($scope.users[i].id == id) {
+                return $scope.users[i].image;
             }
         }
         return String(id);

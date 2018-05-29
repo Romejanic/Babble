@@ -39,6 +39,15 @@
                     <div class="button plans" title="Plans" ng-click="showPlans()"></div>
                     <div class="button users" title="Members" ng-click="showMembers()"></div>
                 </div>
+                <div class="member-list" ng-if="memberListOpen">
+                    <h3>{{ selectedConvo.name }}</h3>
+                    <div class="list">
+                        <div class="user" ng-repeat="id in selectedConvo.members">
+                            <img class="avatar" ng-src="{{getUserImageFromId(id) || 'img/avatars/default.png'}}" />
+                            <span class="name">{{ getUserNameFromId(id) }}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="message-list">
                 <div class="message" ng-repeat="msg in selectedConvo.chatHistory" ng-class="{mine: msg.sender == userProfile.id}">
