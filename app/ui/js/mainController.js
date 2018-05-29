@@ -24,12 +24,12 @@ ngApp.controller("messageApp", function($scope) {
             alert("Please enter a valid conversation name!");
             return;
         }
-        $scope.conversations.forEach((v) => {
-            if(v.name == $scope.convoName) {
+        for(var i = 0; i < $scope.conversations.length; i++) {
+            if($scope.conversations[i].name == $scope.convoName) {
                 alert("That conversation name is already taken!");
                 return;
             }
-        });
+        }
         var name = $scope.convoName.trim();
         var members = [ $scope.userProfile.id ];
         $scope.users.forEach((v) => {
