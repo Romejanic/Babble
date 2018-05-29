@@ -35,7 +35,7 @@ ngApp.controller("messageApp", function($scope) {
         $scope.users.forEach((v) => {
             if(v && !v.self && v.selected) {
                 delete v.selected;
-                members.push(v);
+                members.push(v.id);
             }
         });
         if(members.length <= 1) {

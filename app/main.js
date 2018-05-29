@@ -170,11 +170,6 @@ ipcMain.on("sendPacket", (event, packet) => {
 });
 ipcMain.on("createConversation", (event, conversation) => {
     data.conversations.push(conversation);
-    var memberArray = conversation.members;
-    conversation.members = [data.userProfile.id];
-    memberArray.forEach((v) => {
-        conversation.members.push(v.id);
-    });
     client.sendPacket({
         id: "create_conversation",
         payload: conversation
