@@ -1,5 +1,7 @@
 {
   "name": "babble",
+  "displayName": "Babble",
+  "productName": "Babble",
   "version": "0.0.4",
   "description": "Enterprise group chat.",
   "main": "./app/main.js",
