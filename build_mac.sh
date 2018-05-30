@@ -1,2 +1,2 @@
 #!/bin/sh
-electron-packager . Babble --platform=darwin --asar --out=../Builds --icon=../Icons/app-icon.icns
+electron-packager . Babble --platform=darwin --asar --out=../Builds --app-copyright='Jack Davenport 2018' --icon=../Icons/app-icon.icns --app-bundle-id=com.jackdavenport.Babble --app-category-type=public.app-category.social-networking
