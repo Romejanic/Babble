@@ -44,28 +44,20 @@ const client = function() {
                 throw "Object is not a packet! (packet requires identifier)";
             }
             var packetJson = JSON.stringify(packet);
-            // var encrypted = rsa.encryptVerified(packetJson, this.client.server_public_key);
-            // var encrypted = rsa.encrypt(packetJson, this.client.server_public_key);
             var encrypted = obj.client.encryption.encrypt(packetJson);
             this.socket.write(encrypted);
         },
 
         handleMessage: function(data) {
             try {
-                var packetStr;
                 if(obj.client.encryption.aesKey) {
-                    // packetStr = rsa.decryptVerified(data, obj.client.server_public_key);
-                    // packetStr = rsa.decrypt(data, rsa.rsaKeys.private);
-                    packetStr = obj.client.encryption.decrypt(data.toString());
-                } else {
-                    packetStr = data.toString();
-                }
-                var packet = JSON.parse(packetStr);
-                if(!obj.client.encryption.aesKey) {
-                    obj.client.encryption.handleKeyExchangePacket(data, this);
-                } else {
+                    var packetStr = obj.client.encryption.decrypt(data.toString());
+                    var packet = JSON.parse(packetStr);
                     obj.handlePacket(packet);
+                } else {
+                    obj.client.encryption.handleKeyExchangePacket(data, this);
                 }
+                
             } catch(e) {
                 var error = {
                     id: "bad_format_error",
