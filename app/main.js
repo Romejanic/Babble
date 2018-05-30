@@ -52,7 +52,7 @@ function createMainWindow() {
 }
 
 app.on("ready", function() {
-    // buildMenu();
+    buildMenu();
     createMainWindow();
 
     client.onLoggedIn = function(data) {
