@@ -24,6 +24,7 @@ ngApp.controller("messageApp", function($scope) {
         $scope.activeScreen   = "conversation";
         $scope.memberListOpen = false;
         $scope.selectedConvo  = convo;
+        delete $scope.selectedConvo.unread; // mark read
     };
     // switches to the new conversation screen and fetches the users
     $scope.createConversation = function() {
@@ -292,6 +293,19 @@ ngApp.controller("messageApp", function($scope) {
                     $scope.selectedConvo = $scope.conversations[i];
                 }
             });
+        }
+    });
+    ipcRenderer.on("newMessage", (event, message) => {
+        var convo = $scope.getConvo(message.conversation);
+        convo.chatHistory.push(message);
+        if(convo == $scope.selectedConvo) {
+            data.conversations.forEach((v, i) => {
+                if(v.id == $scope.selectedConvo.id) {
+                    $scope.selectedConvo = $scope.conversations[i];
+                }
+            });
+        } else {
+            convo.unread = true;
         }
     });
     // called if the user needs to log in, and sets the screen accordingly

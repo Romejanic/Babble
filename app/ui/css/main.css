@@ -69,6 +69,9 @@
     align-items: center;
 	-webkit-app-region: no-drag;
 }
+.user-icon.new {
+    background-color: rgba(5, 82, 255, 0.5);
+}
 .user-icon.selected {
     background-color: white;
 }

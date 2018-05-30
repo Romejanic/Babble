@@ -9,7 +9,7 @@
 <body ng-controller="messageApp">
     <div class="sidebar">
         <div class="sidebar-content">
-            <div class="user-icon" ng-class="{selected: convo == selectedConvo && activeScreen == 'conversation'}" ng-repeat="convo in conversations" ng-click="select(convo)">
+            <div class="user-icon" ng-class="{selected: convo == selectedConvo && activeScreen == 'conversation', new: convo != selectedConvo && convo.unread}" ng-repeat="convo in conversations" ng-click="select(convo)">
                 <img class="avatar" ng-src="{{convo.image || 'img/avatars/default.png'}}" title="{{ convo.name }}" />
             </div>
             <div class="user-icon add-convo" ng-class="{selected: activeScreen == 'newConversation'}" ng-click="createConversation()">

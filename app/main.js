@@ -52,7 +52,7 @@ function createMainWindow() {
 }
 
 app.on("ready", function() {
-    buildMenu();
+    // buildMenu();
     createMainWindow();
 
     client.onLoggedIn = function(data) {
@@ -207,7 +207,7 @@ function onMessageRecieved(message, addOnly = false) {
         message.timestamp = Date.now();
         convo.chatHistory.push(message);
         if(!addOnly) {
-            mainWindow.webContents.send("getUserData", data);
+            mainWindow.webContents.send("newMessage", message);
             sendMessageNotification(message);
         }
     } else {
