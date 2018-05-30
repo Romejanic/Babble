@@ -72,10 +72,11 @@
             <div class="members">
                 <input class="search" placeholder="Search..." ng-model="conversationMemberSearch" />
                 <div class="user-list">
-                    <div class="user" ng-click="toggleNewUser(user)" ng-class="{ selected: user.selected }" ng-repeat="user in users | filter:conversationMemberSearch">
+                    <div class="user" ng-click="toggleNewUser(user)" ng-class="{ selected: user.selected }" ng-repeat="user in filteredUsers = (users | filter:conversationMemberSearch)">
                         <img ng-src="{{ user.image || 'img/avatars/default.png' }}" class="thumb" />
                         <span class="name">{{ user.name + (user.self ? ' (you)' : '') }}</span>
                     </div>
+                    <span class="no-results" ng-if="filteredUsers.length <= 0">No results found!</span>
                 </div>
             </div>
             <button ng-click="doCreateConversation()">Create</button>
